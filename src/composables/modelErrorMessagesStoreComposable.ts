@@ -52,19 +52,19 @@ export interface IModelErrorMessagesStore {
 
   /**
    * Set new errors and set the validation state into validated state.
-   * @param errors An object contaning errors for properties.
+   * @param errorMessages An object contaning errors for properties.
    */
-  readonly setErrors: (errors: ApiErrorMessages) => void;
+  readonly setErrorMessages: (errorMessages: ApiErrorMessages) => void;
 
   /**
    * Clear the current errors.
    */
-  readonly clearErrors: () => void;
+  readonly clearErrorMessages: () => void;
 
   /**
    * Clear the current errors and set validation state to initial state.
    */
-  readonly resetErrors: () => void;
+  readonly resetErrorMessages: () => void;
 
   /**
    * Get all error messages of all properties.
@@ -138,21 +138,21 @@ export function useModelErrorMessagesStore(): IModelErrorMessagesStore {
       }
     },
 
-    clearErrors(): void {
+    clearErrorMessages(): void {
       modelErrors.value = {};
       isValidated.value = false;
     },
 
-    resetErrors(): void {
-      this.clearErrors();
+    resetErrorMessages(): void {
+      this.clearErrorMessages();
       isValidated.value = false;
     },
 
     getMessage(propertyPath: string): string {
-      return this.getError(propertyPath) || "Hợp lệ";
+      return this.getError(propertyPath) || "Hợp lệ.";
     },
 
-    setErrors(errors: ApiErrorMessages): void {
+    setErrorMessages(errors: ApiErrorMessages): void {
       modelErrors.value = errors;
       isValidated.value = true;
     },

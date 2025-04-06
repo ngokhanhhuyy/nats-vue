@@ -10,7 +10,7 @@ const isDisabled = computed<boolean>(() => {
   return (
     formState?.value.formRequestingState === "submitting" ||
     formState?.value.formRequestingState === "deleting" ||
-    formState?.value.isModelDirty === true
+    formState?.value.isModelDirty === false
   );
 });
 </script>

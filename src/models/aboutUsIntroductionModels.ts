@@ -1,5 +1,5 @@
 import { ThumbnailType } from "@/enums/thumbnailType";
-import { getAboutUsIntroductionRoutePath } from "@/utils/routeUtils";
+import { getPublicAboutUsIntroductionRoutePath } from "@/utils/routeUtils";
 
 declare global {
   type AboutUsIntroductionDetailModel = {
@@ -25,7 +25,7 @@ function createDetail(responseDto: ResponseDto): AboutUsIntroductionDetailModel 
     whyChooseUsContent: responseDto.whyChooseUsContent,
     ourDifferenceContent: responseDto.ourDifferenceContent,
     ourCultureContent: responseDto.ourCultureContent,
-    detailRoute: getAboutUsIntroductionRoutePath()
+    detailRoute: getPublicAboutUsIntroductionRoutePath()
   };
 }
 

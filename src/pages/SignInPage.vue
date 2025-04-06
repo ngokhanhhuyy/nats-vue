@@ -7,11 +7,10 @@ import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
 import { getProtectedDashboardRoutePath } from "@/utils/routeUtils";
 
 // FormComponents.
-// import Form from "@/components/form/Form.vue";
-// import TextInput from "@/components/form/TextInput.vue";
-// import ValidationMessage from "@/components/form/ValidationMessage.vue";
-// import SubmitButton from "@/components/form/SubmitButton.vue";
-import Form from "@/components/form";
+import Form from "@/components/form/Form.vue";
+import TextInput from "@/components/form/TextInput.vue";
+import ValidationMessage from "@/components/form/ValidationMessage.vue";
+import SubmitButton from "@/components/form/SubmitButton.vue";
 
 // Dependencies.
 const generalSettingsStore = useGeneralSettingsStore();
@@ -56,17 +55,17 @@ async function handleSucceededSigningIn(): Promise<void> {
           <!-- UserName -->
           <div class="form-group mb-3">
             <div class="form-floating">
-              <Form.TextInput name="userName" v-model="model.userName" placeholder="" />
+              <TextInput name="userName" v-model="model.userName" placeholder="" />
               <label for="userName">Tên tài khoản</label>
             </div>
 
-            <Form.ValidationMessage name="userName" />
+            <ValidationMessage name="userName" />
           </div>
 
           <!-- Password -->
           <div class="form-group mb-3">
             <div class="form-floating">
-              <Form.TextInput
+              <TextInput
                 v-model="model.password"
                 name="password"
                 type="password"
@@ -74,11 +73,11 @@ async function handleSucceededSigningIn(): Promise<void> {
               />
               <label for="password">Mật khẩu</label>
             </div>
-            <Form.ValidationMessage name="password" />
+            <ValidationMessage name="password" />
           </div>
 
           <!-- SubmitButton -->
-          <Form.SubmitButton class="w-100">Đăng nhập</Form.SubmitButton>
+          <SubmitButton class="w-100">Đăng nhập</SubmitButton>
         </Form>
       </div>
     </div>
@@ -91,7 +90,6 @@ async function handleSucceededSigningIn(): Promise<void> {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0;
 }
 
 .form-container {

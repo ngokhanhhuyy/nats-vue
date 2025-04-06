@@ -8,5 +8,10 @@ import AuthorizationErrorModal from "../modals/AuthorizationErrorModal.vue";
 </script>
 
 <template>
-
+  <NotFoundErrorModal />
+  <SubmissionSuccessModal />
+  <SubmissionErrorModal />
+  <DeletionConfirmationModal />
+  <DeletionSuccessModal />
+  <AuthorizationErrorModal />
 </template>
