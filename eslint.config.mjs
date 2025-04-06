@@ -3,7 +3,6 @@ import vue from 'eslint-plugin-vue';
 import globals from 'globals';
 import ts from 'typescript-eslint';
 import vueParser from "vue-eslint-parser";
-import babelParser from "@babel/eslint-parser";
 
 export default [
   {
@@ -23,8 +22,8 @@ export default [
       languageOptions: {
           parser: vueParser,
           parserOptions: {
-              parser: babelParser,
-          }
+            parser: "@typescript-eslint/parser"
+          },
       },
   },
   js.configs.recommended,
@@ -46,6 +45,8 @@ export default [
       "@typescript-eslint/no-unsafe-function-type": "off",
       "@typescript-eslint/no-namespace": "off",
       "@typescript-eslint/no-empty-object-type": "off",
+      "no-undef": "off",
+      "vue/multi-word-component-names": "off"
     },
   }
 ];

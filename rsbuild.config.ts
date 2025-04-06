@@ -1,6 +1,7 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginVue } from "@rsbuild/plugin-vue";
-import ReactiveTransform from "@vue-macros/reactivity-transform";
+// import ReactiveTransform from "@vue-macros/reactivity-transform";
+// import UnpluginAutoImport from "unplugin-auto-import/rspack";
 
 export default defineConfig({
 	plugins: [
@@ -8,13 +9,29 @@ export default defineConfig({
     // pluginVueJsx(),
     // pluginBabel({ include: /\.(?:jsx|tsx)$/ }),
   ],
-  tools: {
-    rspack: {
-      plugins: [
-        ReactiveTransform.rspack()
-      ]
-    }
-  },
+  // tools: {
+  //   rspack: {
+  //     plugins: [
+  //       ReactiveTransform.rspack(),
+  //       UnpluginAutoImport({
+  //         dts: true,
+  //         imports: [
+  //           "vue",
+  //           "vue-router",
+  //           {
+  //             'vue': [
+  //               ['HTMLAttributes', 'type'],
+  //               ['ButtonHTMLAttributes', 'type'],
+  //               ['InputHTMLAttributes', 'type'],
+  //               ['FormHTMLAttributes', 'type'],
+  //               ['VNodeProps', 'type'],
+  //             ],
+  //           },
+  //         ]
+  //       })
+  //     ]
+  //   }
+  // },
   performance: {
     buildCache: false,
     // chunkSplit: {

@@ -1,0 +1,122 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { signInAsync } from "@/services/authenticationService";
+import { createSignInModel } from "@/models/signInModel";
+import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
+import { getProtectedDashboardRoutePath } from "@/utils/routeUtils";
+
+// FormComponents.
+// import Form from "@/components/form/Form.vue";
+// import TextInput from "@/components/form/TextInput.vue";
+// import ValidationMessage from "@/components/form/ValidationMessage.vue";
+// import SubmitButton from "@/components/form/SubmitButton.vue";
+import Form from "@/components/form";
+
+// Dependencies.
+const generalSettingsStore = useGeneralSettingsStore();
+const router = useRouter();
+
+// States.
+const model = ref<SignInModel>(createSignInModel());
+const mainLogoUrl = "/images/main-logo-transparent-white.png";
+
+// Callbacks.
+async function handleSignIn(): Promise<void> {
+  await signInAsync(model.value.toRequestDto());
+}
+
+async function handleSucceededSigningIn(): Promise<void> {
+  await router.push(getProtectedDashboardRoutePath());
+}
+</script>
+
+<template>
+  <div class="container-fluid flex-fill">
+    <div class="row w-100 justify-content-center align-items-center">
+      <div class="col col-sm-auto col-12 p-0 m-sm-4 m-0 rounded-4 shadow form-container">
+        <!-- Header -->
+        <div class="d-flex justify-content-center align-items-center p-4 pb-2">
+          <div class="logo-container">
+            <img
+              v-bind:src="mainLogoUrl"
+              v-bind:alt="generalSettingsStore.data.applicationName"
+              class="logo w-100 h-100"
+            />
+          </div>
+        </div>
+
+        <!-- Form -->
+        <Form
+          v-bind:model="model"
+          v-bind:submitting-action="handleSignIn"
+          v-on:submission-success="handleSucceededSigningIn"
+          class="bg-white p-3 w-100"
+        >
+          <!-- UserName -->
+          <div class="form-group mb-3">
+            <div class="form-floating">
+              <Form.TextInput name="userName" v-model="model.userName" placeholder="" />
+              <label for="userName">Tên tài khoản</label>
+            </div>
+
+            <Form.ValidationMessage name="userName" />
+          </div>
+
+          <!-- Password -->
+          <div class="form-group mb-3">
+            <div class="form-floating">
+              <Form.TextInput
+                v-model="model.password"
+                name="password"
+                type="password"
+                placeholder=""
+              />
+              <label for="password">Mật khẩu</label>
+            </div>
+            <Form.ValidationMessage name="password" />
+          </div>
+
+          <!-- SubmitButton -->
+          <Form.SubmitButton class="w-100">Đăng nhập</Form.SubmitButton>
+        </Form>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.container-fluid {
+  background-color: var(--bs-success);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.form-container {
+  background-color: var(--bs-white);
+  border: 1px solid var(--bs-success);
+  overflow: hidden;
+  width: 350px;
+}
+
+.logo-container {
+  background: transparent;
+  width: 250px;
+  height: 250px;
+  padding: 3rem;
+  border: 5px solid var(--bs-success);
+  overflow: visible;
+  border-radius: 50%;
+  filter:
+    brightness(0)
+    saturate(100%)
+    invert(38%)
+    sepia(74%)
+    saturate(430%)
+    hue-rotate(100deg)
+    brightness(94%)
+    contrast(95%);
+}
+</style>
