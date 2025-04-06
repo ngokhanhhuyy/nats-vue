@@ -136,7 +136,7 @@ select:is(.is-valid)::placeholder {
 
 .fade-enter-active,
 .fade-leave-active {
-    transition: .5s ease;
+    transition: .35s ease;
 }
 
 .fade-leave-to,

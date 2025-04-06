@@ -32,6 +32,24 @@ export const routeDefinitions: RouteRecordRaw[] = [
           pageTitle: "Trang chủ",
         },
       },
+      {
+        name: "publicSummaryItemList",
+        path: "/gioi-thieu",
+        component: () => import("@/pages/public/summaryItems/SummaryItemsPage.vue"),
+        meta: {
+          pageTitle: "Giới thiệu",
+        },
+      },
+      {
+        name: "publicAboutUsIntroduction",
+        path: "/ve-chung-toi",
+        component: () => {
+          return import("@/pages/public/aboutUsIntroduction/AboutUsIntroductionpage.vue");
+        },
+        meta: {
+          pageTitle: "Về chúng tôi",
+        },
+      },
     ],
   },
   // Protected routes.
@@ -54,6 +72,9 @@ export const routeDefinitions: RouteRecordRaw[] = [
 export const router = createRouter({
   history: createWebHistory("/"),
   routes: routeDefinitions,
+  scrollBehavior() {
+    return { top: 0 };
+  }
 });
 
 router.beforeEach(async (to) => {

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Child components.
 import NavigationBar from "./NavigationBar.vue";
 import Footer from "./Footer.vue";
 </script>

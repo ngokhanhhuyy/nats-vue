@@ -1,15 +1,36 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed, useTemplateRef, onMounted, onUnmounted } from "vue";
 
 // Props.
 const props = defineProps<{ model: SliderItemDetailModel[] }>();
 
+// States.
+const backgroundIndex = ref<number>(0);
+const carouselElement = useTemplateRef("carousel-element");
+
 // Computed.
 const thumbnailUrls = computed<string[]>(() => props.model.map((item) => item.thumbnailUrl));
 
+// Lifecycle.
+onMounted(() => {
+  if (carouselElement.value) {
+    carouselElement.value.addEventListener("slide.bs.carousel", onCarouselSlide);
+  }
+});
+
+onUnmounted(() => {
+  if (carouselElement.value) {
+    carouselElement.value.removeEventListener("slide.bs.carousel", onCarouselSlide);
+  }
+});
+
 // Functions.
 function computeCarouselBackgroundClass(index: number): string {
-  return index == 0 ? "opacity-100" : "opacity-0";
+  return backgroundIndex.value === index ? "opacity-100" : "opacity-0";
+}
+
+function onCarouselSlide(event: Event) {
+  backgroundIndex.value = (event as Event & { to: number }).to;
 }
 </script>
 
@@ -24,11 +45,13 @@ function computeCarouselBackgroundClass(index: number): string {
       v-bind:style="{ background: `url(${thumbnailUrl})` }"
       v-bind:data-index="index"
       v-bind:key="index"
+      ref="carousel-background"
       class="carousel-background"
     ></div>
 
     <div class="carousel-container">
       <div
+        ref="carousel-element"
         id="slider"
         class="carousel slide m-0 w-100 position-relative"
         data-bs-ride="carousel"

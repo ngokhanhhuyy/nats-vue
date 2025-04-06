@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useRoute, RouterLink } from "vue-router";
 
-// Dependencies.
+// Dependencies.;
 const route = useRoute();
 
 // Props.
@@ -10,12 +10,7 @@ const props = defineProps<{ to: string }>();
 
 // Computed.
 const computedClass = computed<string>(() => {
-  const currentPathName = route.fullPath;
-  if (currentPathName === "/" && props.to === "/") {
-    return "active";
-  }
-
-  if (currentPathName.startsWith(props.to)) {
+  if (route.fullPath.startsWith(props.to)) {
     return "active";
   }
 

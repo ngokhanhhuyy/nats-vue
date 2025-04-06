@@ -1,6 +1,6 @@
-export const getPublicHomeRoutePath = () => "/";
+export const getPublicHomeRoutePath = () => "/trang-chu";
 export const getPublicAboutUsIntroductionRoutePath = () => "/ve-chung-toi";
-export const getPublicSummaryItemsRoutePath = (id?: number) => {
+export const getPublicSummaryItemsRoutePath = (id?: number): string => {
 	if (id != null) {
 		return `/gioi-thieu?id=${id}`;
 	}

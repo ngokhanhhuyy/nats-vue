@@ -77,7 +77,7 @@ async function initializeModelAsync(): Promise<HomePageModel> {
     <AboutUsIntroduction v-bind:model="model.aboutUsIntroduction" />
 
     <!-- CatalogItems -->
-    <div class="container mt-3" id="catalog-item-container">
+    <div class="container my-3" id="catalog-item-container">
       <CatalogItemList v-bind:model="model.services" />
       <CatalogItemList v-bind:model="model.courses" />
     </div>
