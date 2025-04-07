@@ -20,6 +20,9 @@ import { createCatalogItemBasicModel } from "@/models/catalogItemModels";
 import { CatalogItemType } from "@/enums/catalogItemType";
 import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
 
+// Layout component.
+import PublicLayout from "@/components/layouts/public/PublicLayout.vue";
+
 // Child components.
 import SliderItemList from "./SliderItemList.vue";
 import SummaryItemList from "./SummaryItemList.vue";
@@ -61,29 +64,29 @@ async function initializeModelAsync(): Promise<HomePageModel> {
 </script>
 
 <template>
-  <div class="container-fluid p-0">
-    <!-- SliderItems -->
-    <SliderItemList v-bind:model="model.sliderItems" />
+  <PublicLayout>
+    <div class="container-fluid p-0">
+      <!-- SliderItems -->
+      <SliderItemList v-bind:model="model.sliderItems" />
 
-    <!-- ApplicationName -->
-    <div class="container-fluid p-2 mb-3 shadow application-name">
-        {{ generalSettingsStore.data.applicationName }}
+      <!-- ApplicationName -->
+      <div class="container-fluid p-2 mb-3 shadow application-name">
+          {{ generalSettingsStore.data.applicationName }}
+      </div>
+
+      <!-- SummaryItems -->
+      <SummaryItemList v-bind:model="model.summaryItems" />
+
+      <!-- AboutUsIntroduction -->
+      <AboutUsIntroduction v-bind:model="model.aboutUsIntroduction" />
+
+      <!-- CatalogItems -->
+      <div class="container my-3" id="catalog-item-container">
+        <CatalogItemList v-bind:model="model.services" />
+        <CatalogItemList v-bind:model="model.courses" />
+      </div>
     </div>
-
-    <!-- SummaryItems -->
-    <SummaryItemList v-bind:model="model.summaryItems" />
-
-    <!-- AboutUsIntroduction -->
-    <AboutUsIntroduction v-bind:model="model.aboutUsIntroduction" />
-
-    <!-- CatalogItems -->
-    <div class="container my-3" id="catalog-item-container">
-      <CatalogItemList v-bind:model="model.services" />
-      <CatalogItemList v-bind:model="model.courses" />
-    </div>
-  </div>
-
-
+  </PublicLayout>
 </template>
 
 <style scoped>

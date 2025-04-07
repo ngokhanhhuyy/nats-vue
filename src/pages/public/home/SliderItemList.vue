@@ -60,14 +60,14 @@ function onCarouselSlide(event: Event) {
         <!-- Photos -->
         <div class="carousel-inner">
           <div
-            v-for="(sliderItem, index) in model"
+            v-for="(item, index) in model"
             v-bind:key="index"
             v-bind:class="{ active: index === 0 }"
             class="carousel-item"
           >
             <img
-              v-bind:src="sliderItem.thumbnailUrl"
-              v-bind:alt="sliderItem.title"
+              v-bind:src="item.thumbnailUrl"
+              v-bind:alt="item.title ?? `Ảnh #${item.id}`"
               class="carousel-img d-block w-100"
             />
           </div>

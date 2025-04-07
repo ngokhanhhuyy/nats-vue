@@ -2,6 +2,9 @@
 import { computed, type CSSProperties } from "vue";
 import { useRoute } from "vue-router";
 
+// Layout component.
+import PublicLayout from "./PublicLayout.vue";
+
 // Dependencies.
 const route = useRoute();
 
@@ -23,17 +26,19 @@ const title = computed<string>(() => {
 </script>
 
 <template>
-  <div>
-    <div v-bind:style="titleContainerStyle" class="container-fluid p-5 shadow title-container">
-      <div class="container p-3">
-        <span class="fs-1" v-once>
-          {{ title }}
-        </span>
+  <PublicLayout>
+    <div>
+      <div v-bind:style="titleContainerStyle" class="container-fluid p-5 shadow title-container">
+        <div class="container p-3">
+          <span class="fs-1" v-once>
+            {{ title }}
+          </span>
+        </div>
       </div>
-    </div>
 
-    <slot></slot>
-  </div>
+      <slot></slot>
+    </div>
+  </PublicLayout>
 </template>
 
 <style scoped>

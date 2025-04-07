@@ -1,33 +1,15 @@
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { checkAuthenticationStatusAsync } from "@/services/authenticationService";
 
-interface IAuthenticationStates {
-  hasInitiallyCheckedAuthentication: boolean;
-  isAuthenticated: boolean;
-}
+const isInitialAuthenticated = await checkAuthenticationStatusAsync();
 
-export const useAuthenticationStore = defineStore("authentication", {
-  state: (): IAuthenticationStates => ({
-    hasInitiallyCheckedAuthentication: false,
-    isAuthenticated: false,
-  }),
-  actions: {
-    async isAuthenticatedAsync(): Promise<boolean> {
-      if (!this.hasInitiallyCheckedAuthentication) {
-        try {
-          this.isAuthenticated = await checkAuthenticationStatusAsync();
-        } catch {
-          this.isAuthenticated = false;
-        }
-        this.hasInitiallyCheckedAuthentication = true;
-      }
+export const useAuthenticationStore = defineStore("authentication", () => {
+  const isAuthenticated = ref(isInitialAuthenticated);
+  
+  async function reloadAsync() {
+    isAuthenticated.value = await checkAuthenticationStatusAsync();
+  }
 
-      return this.isAuthenticated;
-    },
-
-    clearAuthenticationStatus(): void {
-      this.hasInitiallyCheckedAuthentication = false;
-      this.isAuthenticated = false;
-    },
-  },
+  return { isAuthenticated, reloadAsync };
 });

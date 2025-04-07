@@ -1,25 +1,7 @@
-<script setup lang="ts">
-import { RouterView } from "vue-router";
-
-// Child component.
-import NavigationBar from "./NavigationBar.vue";
-</script>
-
 <template>
   <div class="container-fluid flex-fill d-flex flex-column w-100">
-    <!-- NavigationBar -->
-    <NavigationBar />
-
     <div class="body-container flex-fill">
-      <RouterView v-slot="{ Component }">
-        <template v-if="Component">
-          <Transition name="fade" mode="out-in">
-            <Suspense>
-              <Component :is="Component" />
-            </Suspense>
-          </Transition>
-        </template>
-      </RouterView>
+      <slot></slot>
     </div>
   </div>
 </template>
@@ -29,7 +11,7 @@ import NavigationBar from "./NavigationBar.vue";
   --bs-body-font-size: 1.1rem !important;
   background: rgba(var(--bs-success-rgb), 0.1);
   font-size: var(--bs-body-font-size);
-  height: 100%;
+  min-height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: column;

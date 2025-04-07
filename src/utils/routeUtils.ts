@@ -18,3 +18,4 @@ export const getPublicEnquiryRoutePath = () => "/cau-hoi";
 
 export const getSignInRoutePath = () => "/dang-nhap";
 export const getProtectedDashboardRoutePath = () => "/quan-tri/bang-dieu-khien";
+export const getProtectedContentRoutePath = () => "/quan-tri/noi-dung";

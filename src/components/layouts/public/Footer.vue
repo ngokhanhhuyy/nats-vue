@@ -1,16 +1,9 @@
-<script lang="ts">
-type Model = {
-  contacts: ContactDetailModel[];
-};
-</script>
-
 <script setup lang="ts">
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
-import { getContactListAsync } from "@/services/contactService";
-import { createContactDetailModel } from "@/models/contactModels";
 import { useAuthenticationStore } from "@/stores/authenticationStore";
 import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
+import { useContactStore } from "@/stores/contactStore";
 import * as routeUtils from "@/utils/routeUtils";
 
 // Child component.
@@ -19,9 +12,7 @@ import ContactLink from "./FooterContactLink.vue";
 // Dependencies.
 const authenticationStore = useAuthenticationStore();
 const generalSettingsStore = useGeneralSettingsStore();
-
-// States.
-const model: Model = await initializeModelAsync();
+const contactStore = useContactStore();
 
 // Computed.
 const protectedDashboardLinkPath = computed<string>(() => {
@@ -39,14 +30,6 @@ const protectedDashboardLinkText = computed<string>(() => {
 
   return "Đăng nhập";
 });
-
-// Callbacks.
-async function initializeModelAsync(): Promise<Model> {
-  const responseDtos = await getContactListAsync();
-  return {
-    contacts: responseDtos.map(dto => createContactDetailModel(dto))
-  };
-}
 </script>
 
 <template>
@@ -96,9 +79,9 @@ async function initializeModelAsync(): Promise<Model> {
         <!-- Contacts -->
         <div class="col col-xl-5 col-lg-6 col-12">
           <span class="fw-bold fs-4 opacity-75"> Liên hệ </span>
-          <template v-if="model.contacts">
+          <template v-if="contactStore.data?.length">
             <ContactLink
-              v-for="contact in model.contacts"
+              v-for="contact in contactStore.data"
               v-bind:model="contact"
               v-bind:key="contact.id"
             />

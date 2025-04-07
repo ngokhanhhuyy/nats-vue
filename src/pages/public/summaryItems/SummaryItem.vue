@@ -76,8 +76,8 @@ onMounted(() => {
 .thumbnail-column {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: start;
+  justify-content: start;
+  align-items: center;
 }
 
 img {

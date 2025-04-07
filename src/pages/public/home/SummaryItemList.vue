@@ -10,22 +10,22 @@ defineProps<{ model: SummaryItemDetailModel[] }>();
   <div class="container">
     <div class="row g-3 p-3">
       <RouterLink
-        v-for="(summaryItem, index) in model"
-        v-bind:to="getPublicSummaryItemsRoutePath(summaryItem.id)"
+        v-for="(item, index) in model"
+        v-bind:to="getPublicSummaryItemsRoutePath(item.id)"
         v-bind:key="index"
         class="col col-xl-3 col-md-6 col-12 p-3 summary-item-link"
       >
         <img
-          v-bind:src="summaryItem.thumbnailUrl"
-          v-bind:alt="summaryItem.name"
+          v-bind:src="item.thumbnailUrl"
+          v-bind:alt="item.name"
           class="rounded-circle thumbnail mb-3 shadow"
         />
 
         <span class="fs-3 text-center text-success mb-3">
-          {{ summaryItem.name }}
+          {{ item.name }}
         </span>
 
-        <p>{{ summaryItem.summaryContent }}</p>
+        <p>{{ item.summaryContent }}</p>
       </RouterLink>
     </div>
   </div>

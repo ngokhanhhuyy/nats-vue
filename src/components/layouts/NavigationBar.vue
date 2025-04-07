@@ -1,15 +1,68 @@
+<script lang="ts">
+type RouteItem = {
+  to: string;
+  text: string;
+};
+</script>
+
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
+import { computed, useTemplateRef, watch } from "vue";
+import { useRoute, RouterLink } from "vue-router";
 import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
 import * as routeUtils from "@/utils/routeUtils";
 import Link from "./NavigationBarLink.vue";
 
 // Dependencies.
+const route = useRoute();
 const generalSettingsStore = useGeneralSettingsStore();
+
+// States.
+const toggleButtonElement = useTemplateRef("toggle-button");
+const offcanvasElement = useTemplateRef("offcanvas");
+
+// Computed.
+const routeItems = computed<RouteItem[]>(() => {
+  if (!route.fullPath.startsWith("/dang-nhap") && !route.fullPath.startsWith("/quan-tri")) {
+    return [
+      { to: routeUtils.getPublicHomeRoutePath(), text: "Trang chủ" },
+      { to: routeUtils.getPublicSummaryItemsRoutePath(), text: "Giới thiệu" },
+      { to: routeUtils.getPublicAboutUsIntroductionRoutePath(), text: "Về chúng tôi" },
+      { to: routeUtils.getPublicServiceListRoutePath(), text: "Dịch vụ" },
+      { to: routeUtils.getPublicCourseListRoutePath(), text: "Khoá học" },
+      { to: routeUtils.getPublicContactsRoutePath(), text: "Liên hệ" }
+    ];
+  }
+
+  return [
+    { to: routeUtils.getPublicHomeRoutePath(), text: "Trang chủ" },
+    { to: routeUtils.getProtectedDashboardRoutePath(), text: "Bảng điều khiển" },
+    { to: routeUtils.getProtectedContentRoutePath(), text: "Nội dung" },
+  ];
+});
+
+const computedClass = computed<string | undefined>(() => {
+  if (!route.fullPath.startsWith("/quan-tri")) {
+    return "shadow";
+  }
+
+  return "border-bottom border-success-subtle";
+});
+
+// Watch.
+watch(() => route.fullPath, () => {
+  if (offcanvasElement.value?.classList.contains("show")) {
+    toggleButtonElement.value?.click();
+  }
+});
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-xl fixed-top shadow fs-5" id="navbar" data-bs-theme="light">
+  <nav
+    v-bind:class="computedClass"
+    class="navbar navbar-expand-xl fixed-top fs-5"
+    id="navbar"
+    data-bs-theme="light"
+  >
     <div class="container">
       <!-- Main logo -->
       <RouterLink
@@ -29,6 +82,7 @@ const generalSettingsStore = useGeneralSettingsStore();
 
       <!-- NavigationButtonInSmallScreens -->
       <button
+        ref="toggle-button"
         class="navbar-toggler fs-3 me-2 py-2"
         id="navbar-toggler-button"
         type="button"
@@ -43,6 +97,7 @@ const generalSettingsStore = useGeneralSettingsStore();
 
       <!-- Offcanvas -->
       <div
+        ref="offcanvas"
         class="offcanvas offcanvas-end"
         tabindex="-1"
         id="navbar-content"
@@ -59,45 +114,9 @@ const generalSettingsStore = useGeneralSettingsStore();
         </div>
         <div class="offcanvas-body">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-end w-100">
-            <!-- Home -->
-            <li class="nav-item">
-              <Link v-bind:to="routeUtils.getPublicHomeRoutePath()">
-              Trang chủ
-              </Link>
-            </li>
-
-            <!-- SummaryItem -->
-            <li class="nav-item">
-              <Link v-bind:to="routeUtils.getPublicSummaryItemsRoutePath()">
-              Giới thiệu
-              </Link>
-            </li>
-
-            <!-- AboutUsIntroduction -->
-            <li class="nav-item">
-              <Link v-bind:to="routeUtils.getPublicAboutUsIntroductionRoutePath()">
-              Về chúng tôi
-              </Link>
-            </li>
-
-            <!-- CatalogItem - Services -->
-            <li class="nav-item">
-              <Link v-bind:to="routeUtils.getPublicServiceListRoutePath()">
-              Dịch vụ
-              </Link>
-            </li>
-
-            <!-- CatalogItem - Course -->
-            <li class="nav-item">
-              <Link v-bind:to="routeUtils.getPublicCourseListRoutePath()">
-              Khoá học
-              </Link>
-            </li>
-
-            <!-- Enquiry -->
-            <li class="nav-item">
-              <Link v-bind:to="routeUtils.getPublicEnquiryRoutePath()">
-              Liên hệ
+            <li v-for="item in routeItems" v-bind:key="item.to" class="nav-item">
+              <Link v-bind:to="item.to">
+                {{ item.text }}
               </Link>
             </li>
           </ul>

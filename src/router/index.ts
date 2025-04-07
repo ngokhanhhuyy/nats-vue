@@ -2,10 +2,6 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router"
 import { useAuthenticationStore } from "@/stores/authenticationStore";
 import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
 
-// Layout components.
-import PublicLayout from "@/components/layouts/public/PublicLayout.vue";
-import ProtectedLayout from "@/components/layouts/protected/ProtectedLayout.vue";
-
 export const routeDefinitions: RouteRecordRaw[] = [
   {
     path: "/",
@@ -23,7 +19,6 @@ export const routeDefinitions: RouteRecordRaw[] = [
   {
     path: "/",
     redirect: "/trang-chu",
-    component: PublicLayout,
     children: [
       {
         name: "publicHome",
@@ -57,19 +52,18 @@ export const routeDefinitions: RouteRecordRaw[] = [
   {
     path: "/quan-tri",
     redirect: "/bang-dieu-khien",
-    component: ProtectedLayout,
     children: [
       {
         name: "protectedDashboard",
-        path: "/bang-dieu-khien",
-        component: () => import("@/pages/protected/Dashboard.vue"),
+        path: "bang-dieu-khien",
+        component: () => import("@/pages/protected/dashboard/DashboardPage.vue"),
         meta: {
           pageTitle: "Bảng điều khiển",
         },
       },
       {
         name: "protectedContent",
-        path: "/noi-dung",
+        path: "noi-dung",
         component: () => import("@/pages/protected/content/ContentPage.vue"),
         meta: {
           pageTitle: "Nội dung",
@@ -98,14 +92,12 @@ router.beforeEach(async (to) => {
   // const initialDataStore = useInitialDataStore();
 
   // Redirect to home if the user accesses login page when already authenticated.
-  if (to.name === "signIn") {
-    if (await authStore.isAuthenticatedAsync()) {
-      return { name: "protectedDashboard" };
-    }
+  if (to.name === "signIn" && authStore.isAuthenticated) {
+    return { name: "protectedDashboard" };
   } else if (to.path.startsWith("/quan-tri")) {
     // Redirect to login page if the user accesses any protected pages while not having been
     // authenticated yet.
-    if (!(await authStore.isAuthenticatedAsync())) {
+    if (!authStore.isAuthenticated) {
       return { name: "signIn" };
     }
 
