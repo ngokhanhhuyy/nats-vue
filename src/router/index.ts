@@ -4,6 +4,7 @@ import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
 
 // Layout components.
 import PublicLayout from "@/components/layouts/public/PublicLayout.vue";
+import ProtectedLayout from "@/components/layouts/protected/ProtectedLayout.vue";
 
 export const routeDefinitions: RouteRecordRaw[] = [
   {
@@ -44,7 +45,7 @@ export const routeDefinitions: RouteRecordRaw[] = [
         name: "publicAboutUsIntroduction",
         path: "/ve-chung-toi",
         component: () => {
-          return import("@/pages/public/aboutUsIntroduction/AboutUsIntroductionpage.vue");
+          return import("@/pages/public/aboutUsIntroduction/AboutUsIntroductionPage.vue");
         },
         meta: {
           pageTitle: "Về chúng tôi",
@@ -56,6 +57,7 @@ export const routeDefinitions: RouteRecordRaw[] = [
   {
     path: "/quan-tri",
     redirect: "/bang-dieu-khien",
+    component: ProtectedLayout,
     children: [
       {
         name: "protectedDashboard",
@@ -64,7 +66,15 @@ export const routeDefinitions: RouteRecordRaw[] = [
         meta: {
           pageTitle: "Bảng điều khiển",
         },
-      }
+      },
+      {
+        name: "protectedContent",
+        path: "/noi-dung",
+        component: () => import("@/pages/protected/content/ContentPage.vue"),
+        meta: {
+          pageTitle: "Nội dung",
+        },
+      },
     ]
   },
 ];

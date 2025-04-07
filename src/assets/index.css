@@ -118,11 +118,11 @@ select:is(.is-valid)::placeholder {
   margin-left: 5px;
 }
 
-.row[class*="g-"]>[class^="col"],
+/* .row[class*="g-"]>[class^="col"],
 .row[class*="gy-"]>[class^="col"] {
   padding-top: calc(var(--bs-gutter-y) / 2);
   padding-bottom: calc(var(--bs-gutter-y) / 2);
-}
+} */
 
 .fade-animation {
   animation-name: fade;

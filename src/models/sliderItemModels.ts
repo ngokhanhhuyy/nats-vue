@@ -1,7 +1,7 @@
 declare global {
 	type SliderItemDetailModel = {
 		id: number;
-		title: string;
+		title: string | null;
 		index: number;
 		thumbnailUrl: string;
 	}

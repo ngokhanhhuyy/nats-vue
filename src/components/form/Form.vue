@@ -100,6 +100,7 @@ async function submitAsync(event: Event): Promise<void> {
     if (props.submissionSucceededModal ?? true) {
       await modalStore.getSubmissionSuccessConfirmationAsync();
     }
+    
     emit("submissionSuccess", submissionResult);
   } catch (error) {
     const isValidationError = error instanceof ValidationError;
