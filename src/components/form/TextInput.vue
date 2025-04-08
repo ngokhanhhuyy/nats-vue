@@ -9,12 +9,16 @@ type TextInputProps = {
 <script setup lang="ts">
 import { ref, computed, inject, type Ref } from "vue";
 import { formStateKey, type FormState } from "./Form.vue";
+import { fieldNameKey } from "./Field.vue";
 
 // Dependencies.
 const formState = inject<Ref<FormState>>(formStateKey);
+const fieldName = inject<string>(fieldNameKey);
 
 // Props.
-const props = withDefaults(defineProps<TextInputProps>(), { type: "text" });
+const props = withDefaults(defineProps<TextInputProps>(), {
+  type: "text"
+});
 
 // State.
 const model = defineModel<string>({ default: "" });
@@ -45,8 +49,10 @@ const computedModel = computed<string>({
 });
 
 const computedClass = computed<string | undefined>(() => {
-  if (props.name && !isLoading.value) {
-    return formState?.value.modelErrorMessagesStore.getInputClass(props.name) ?? undefined;
+  if ((props.name ?? fieldName) && !isLoading.value) {
+    return formState?.value.modelErrorMessagesStore
+      .getInputClass((props.name || fieldName)!)
+      ?? undefined;
   }
 
   return undefined;

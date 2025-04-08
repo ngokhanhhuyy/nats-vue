@@ -77,4 +77,9 @@ export default defineConfig({
       // host: "frontend-workstation.khanhhuy.dev",
     },
   },
+  output: {
+    sourceMap: {
+      js: "source-map"
+    }
+  }
 });

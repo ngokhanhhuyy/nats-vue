@@ -1,18 +1,36 @@
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted, useTemplateRef } from "vue";
 import { RouterLink } from "vue-router";
-import { getSliderItemListAsync } from "@/services/sliderItemService";
-import { createSliderItemDetailModel } from "@/models/sliderItemModels";
 
 // Layout components.
 import MainBlock from "@/components/layouts/protected/MainBlock.vue";
 
-// States.
-const model = await initializeModelAsync();
+// Props.
+defineProps<{ model: SliderItemDetailModel[] }>();
 
-// Functions.
-async function initializeModelAsync(): Promise<SliderItemDetailModel[]> {
-  const responseDtos = await getSliderItemListAsync();
-  return responseDtos.map((dto) => createSliderItemDetailModel(dto));
+// States.
+const currentItemIndex = ref<number>(0);
+const templateRef = useTemplateRef("slider");
+
+// LifeCycle.
+onMounted(() => {
+  templateRef.value?.addEventListener("slide.bs.carousel", handleSliderItemChanged);
+});
+
+onUnmounted(() => {
+  templateRef.value?.removeEventListener("slide.bs.carousel", handleSliderItemChanged);
+});
+
+// Functions.x
+function computeThumbnailClass(index: number): string | undefined {
+  if (index === currentItemIndex.value) {
+    return "bg-success-subtle border-success";
+  }
+}
+
+function handleSliderItemChanged(e: Event) {
+  const event = e as Event & { to: number };
+  currentItemIndex.value = event.to;
 }
 </script>
 
@@ -28,6 +46,7 @@ async function initializeModelAsync(): Promise<SliderItemDetailModel[]> {
     <template #body>
       <!-- Carousel -->
       <div
+        ref="slider"
         id="slider"
         class="carousel slide overflow-visible m-3 position-relative img-thumbnail"
         data-bs-ride="carousel"
@@ -85,31 +104,21 @@ async function initializeModelAsync(): Promise<SliderItemDetailModel[]> {
       </div>
 
       <!-- List -->
-      <ul class="list-group list-group-flush border-top">
-        <li v-for="item in model" v-bind:key="item.id" class="list-group-item">
-          <!-- Thumbnail -->
+      <div class="d-flex flex-wrap border-top px-2">
+        <RouterLink
+          v-for="(item, index) in model"
+          v-bind:key="index"
+          v-bind:to="item.updateRoute"
+          class="m-2"
+        >
           <img
             v-bind:src="item.thumbnailUrl"
             v-bind:alt="`Ảnh #${item.id}`"
+            v-bind:class="computeThumbnailClass(index)"
             class="img-thumbnail thumbnail"
           />
-
-          <!-- Detail -->
-          <div class="ms-2 flex-fill d-flex flex-column">
-            <span class="fw-bold text-success">
-              {{ item.title ?? `Ảnh #${item.id}` }}
-            </span>
-
-            <span class="small opacity-50"> Ảnh {{ item.id }} </span>
-          </div>
-
-          <!-- EditLink -->
-          <RouterLink to="#" class="btn btn-outline-success btn-sm edit-link">
-            <i class="bi bi-pencil-square"></i>
-            <span class="d-sm-inline d-none ms-1">Sửa</span>
-          </RouterLink>
-        </li>
-      </ul>
+        </RouterLink>
+      </div>
     </template>
   </MainBlock>
 </template>
@@ -122,10 +131,11 @@ async function initializeModelAsync(): Promise<SliderItemDetailModel[]> {
 }
 
 .thumbnail {
-    width: 60px;
-    height: auto;
-    aspect-ratio: 1;
-    object-fit: cover;
+  width: 60px;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: border-color, background-color .6s ease;
 }
 
 :deep(a.edit-link) {

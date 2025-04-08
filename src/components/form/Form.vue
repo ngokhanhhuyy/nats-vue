@@ -36,7 +36,7 @@ import { OperationError, ValidationError } from "@/errors";
 const modalStore = useModalStore();
 
 // Props/Emits.
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   model: TModel;
   id?: string;
   disabled?: boolean;
@@ -45,7 +45,10 @@ const props = defineProps<{
   deletingAction?: () => Promise<void>;
   deletionSucceededModal?: boolean;
   disableDirtyModelChecker?: boolean;
-}>();
+}>(), {
+  submissionSucceededModal: true,
+  deletionSucceededModal: true
+});
 
 const emit = defineEmits<{
   (event: "submissionSuccess", submissionResult: TSubmissionResult): void;

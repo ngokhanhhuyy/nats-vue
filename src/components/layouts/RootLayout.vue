@@ -10,10 +10,10 @@ const route = useRoute();
 </script>
 
 <template>
-  <body class="container-fluid p-0 d-flex flex-column position-relative">
+  <div class="container-fluid p-0 d-flex flex-column position-relative min-vh-100">
     <NavigationBar />
 
-    <main class="flex-fill h-100 fade-animation fade-animation-reverse">
+    <main class="d-flex flex-column flex-fill h-100">
       <RouterView v-slot="{ Component }">
         <template v-if="Component">
           <Transition name="fade" mode="out-in">
@@ -24,8 +24,9 @@ const route = useRoute();
         </template>
       </RouterView>
     </main>
+    
     <Modals />
-  </body>
+  </div>
 </template>
 
 <style scoped>

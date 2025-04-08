@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { signInAsync } from "@/services/authenticationService";
 import { createSignInModel } from "@/models/signInModel";
+import { useAuthenticationStore } from "@/stores/authenticationStore";
 import { useGeneralSettingsStore } from "@/stores/generalSettingsStore";
 import { getProtectedDashboardRoutePath } from "@/utils/routeUtils";
 
@@ -13,6 +14,7 @@ import ValidationMessage from "@/components/form/ValidationMessage.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
 
 // Dependencies.
+const authenticationStore = useAuthenticationStore();
 const generalSettingsStore = useGeneralSettingsStore();
 const router = useRouter();
 
@@ -26,6 +28,7 @@ async function handleSignIn(): Promise<void> {
 }
 
 async function handleSucceededSigningIn(): Promise<void> {
+  await authenticationStore.reloadAsync();
   await router.push(getProtectedDashboardRoutePath());
 }
 </script>

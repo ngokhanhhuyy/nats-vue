@@ -11,7 +11,7 @@
   --bs-body-font-size: 1.1rem !important;
   background: rgba(var(--bs-success-rgb), 0.1);
   font-size: var(--bs-body-font-size);
-  min-height: 100vh;
+  min-height: 100%;
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -25,12 +25,23 @@
   border-left: 1px solid rgba(var(--bs-success-rgb), 0.25);
   border-right: 1px solid rgba(var(--bs-success-rgb), 0.25);
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: stretch;
   padding: 1rem;
   box-sizing: border-box;
+}
+</style>
+
+<style>
+.btn-outline-primary:not(:hover),
+.btn-outline-success:not(:hover),
+.btn-outline-warning:not(:hover),
+.btn-outline-danger:not(:hover),
+.btn-outline-secondary:not(:hover) {
+    background: white !important;
+    overflow: hidden;
 }
 </style>

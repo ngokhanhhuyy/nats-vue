@@ -1,4 +1,5 @@
 import { getPublicSummaryItemsRoutePath } from "@/utils/routeUtils";
+import { getProtectedSummaryItemUpdateRoutePath } from "@/utils/routeUtils";
 
 declare global {
   type SummaryItemDetailModel = {
@@ -8,6 +9,7 @@ declare global {
     detailContent: string;
     thumbnailUrl: string;
     detailRoute: string;
+    updateRoute: string;
   };
 }
 
@@ -20,6 +22,9 @@ function createDetail(responseDto: SummaryItemResponseDto): SummaryItemDetailMod
     thumbnailUrl: responseDto.thumbnailUrl ?? "https://placehold.co/256",
     get detailRoute(): string {
       return getPublicSummaryItemsRoutePath(this.id);
+    },
+    get updateRoute(): string {
+      return getProtectedSummaryItemUpdateRoutePath(this.id);
     }
   };
 }

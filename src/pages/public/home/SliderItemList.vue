@@ -13,15 +13,11 @@ const thumbnailUrls = computed<string[]>(() => props.model.map((item) => item.th
 
 // Lifecycle.
 onMounted(() => {
-  if (carouselElement.value) {
-    carouselElement.value.addEventListener("slide.bs.carousel", onCarouselSlide);
-  }
+  carouselElement.value?.addEventListener("slide.bs.carousel", onCarouselSlide);
 });
 
 onUnmounted(() => {
-  if (carouselElement.value) {
-    carouselElement.value.removeEventListener("slide.bs.carousel", onCarouselSlide);
-  }
+  carouselElement.value?.removeEventListener("slide.bs.carousel", onCarouselSlide);
 });
 
 // Functions.

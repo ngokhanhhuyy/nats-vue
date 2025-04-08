@@ -3,6 +3,7 @@ import {
   getPublicServiceDetailRoutePath,
   getPublicCourseDetailRoutePath,
   getPublicProductDetailRoutePath,
+  getProtectedCatalogItemUpdateRoutePath
 } from "@/utils/routeUtils";
 
 declare global {
@@ -13,6 +14,7 @@ declare global {
     summary: string;
     thumbnailUrl: string;
     detailRoute: string;
+    updateRoute: string;
   };
 
   type CatalogItemDetailModel = {
@@ -25,6 +27,7 @@ declare global {
     photos: CatalogItemDetailPhotoModel[];
     otherItems: CatalogItemBasicModel[];
     detailRoute: string;
+    updateRoute: string;
     typeDisplayName: string;
   };
 
@@ -69,6 +72,9 @@ function createBasic(responseDto: BasicResponseDto): BasicModel {
           return getPublicProductDetailRoutePath(this.id);
       }
     },
+    get updateRoute(): string {
+      return getProtectedCatalogItemUpdateRoutePath(this.id);
+    }
   };
 }
 
@@ -98,6 +104,9 @@ function createDetail(responseDto: DetailResponseDto): DetailModel {
         case CatalogItemType.Product:
           return getPublicProductDetailRoutePath(this.id);
       }
+    },
+    get updateRoute(): string {
+      return getProtectedCatalogItemUpdateRoutePath(this.id);
     },
     get typeDisplayName(): string {
       return typeDisplayNames[this.type];

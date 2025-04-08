@@ -19,25 +19,10 @@ const computedClass = computed<string>(() => {
 </script>
 
 <template>
-  <li class="nav-item">
-    <RouterLink v-bind:to="to" v-bind:class="computedClass" class="nav-link">
-      <slot></slot>
-    </RouterLink>
-  </li>
+  <RouterLink v-bind:to="to" v-bind:class="computedClass" class="nav-link">
+    <slot></slot>
+  </RouterLink>
 </template>
 
 <style scoped>
-.nav-link {
-  --bs-nav-link-color: var(--navbar-foreground-color) !important;
-  --bs-nav-link-hover-color: var(--navbar-foreground-color) !important;
-  --bs-navbar-active-color: var(--navbar-foreground-color) !important;
-  margin-right: 15px;
-  padding: 3px 10px;
-  border-radius: 8px;
-}
-
-.nav-link.active {
-  background-color: var(--bs-success) !important;
-  color: var(--bs-white);
-}
 </style>

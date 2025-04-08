@@ -62,12 +62,44 @@ export const routeDefinitions: RouteRecordRaw[] = [
         },
       },
       {
-        name: "protectedContent",
         path: "noi-dung",
-        component: () => import("@/pages/protected/content/ContentPage.vue"),
-        meta: {
-          pageTitle: "Nội dung",
-        },
+        children: [
+          {
+            name: "protectedContent",
+            path: "",
+            component: () => import("@/pages/protected/content/ContentPage.vue"),
+            meta: {
+              pageTitle: "Nội dung",
+            },
+          },
+          {
+            path: "trinh-chieu-anh",
+            children: [
+              {
+                name: "protectedSliderItemCreate",
+                path: "",
+                component: () => {
+                  return import("@/pages/protected/sliderItemUpsert/SliderItemUpsertPage.vue");
+                },
+                props: { isForCreating: true },
+                meta: {
+                  pageTitle: "Tạo ảnh trình chiếu mới",
+                },
+              },
+              {
+                name: "protectedSliderItemUpdate",
+                path: ":id(\\d+)",
+                component: () => {
+                  return import("@/pages/protected/sliderItemUpsert/SliderItemUpsertPage.vue");
+                },
+                props: { isForCreating: false },
+                meta: {
+                  pageTitle: "Chỉnh sửa ảnh trình chiếu",
+                },
+              }
+            ]
+          }
+        ]
       },
     ]
   },
