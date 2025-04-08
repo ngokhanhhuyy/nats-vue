@@ -9,8 +9,8 @@ import { getProtectedDashboardRoutePath } from "@/utils/routeUtils";
 
 // FormComponents.
 import Form from "@/components/form/Form.vue";
+import Field from "@/components/form/Field.vue";
 import TextInput from "@/components/form/TextInput.vue";
-import ValidationMessage from "@/components/form/ValidationMessage.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
 
 // Dependencies.
@@ -24,7 +24,10 @@ const mainLogoUrl = "/images/main-logo-transparent-white.png";
 
 // Callbacks.
 async function handleSignIn(): Promise<void> {
-  await signInAsync(model.value.toRequestDto());
+  await Promise.all([
+    signInAsync(model.value.toRequestDto()),
+    new Promise(resolve => setTimeout(resolve, 1000))
+  ]);
 }
 
 async function handleSucceededSigningIn(): Promise<void> {
@@ -51,33 +54,20 @@ async function handleSucceededSigningIn(): Promise<void> {
         <!-- Form -->
         <Form
           v-bind:model="model"
+          v-bind:submission-succeeded-modal="false"
           v-bind:submitting-action="handleSignIn"
           v-on:submission-success="handleSucceededSigningIn"
           class="bg-white p-3 w-100"
         >
           <!-- UserName -->
-          <div class="form-group mb-3">
-            <div class="form-floating">
-              <TextInput name="userName" v-model="model.userName" placeholder="" />
-              <label for="userName">Tên tài khoản</label>
-            </div>
-
-            <ValidationMessage name="userName" />
-          </div>
+          <Field name="userName" display-name="Tên tài khoản" class="mb-3" floating>
+            <TextInput name="userName" v-model="model.userName" placeholder="" />
+          </Field>
 
           <!-- Password -->
-          <div class="form-group mb-3">
-            <div class="form-floating">
-              <TextInput
-                v-model="model.password"
-                name="password"
-                type="password"
-                placeholder=""
-              />
-              <label for="password">Mật khẩu</label>
-            </div>
-            <ValidationMessage name="password" />
-          </div>
+          <Field name="password" display-name="Mật khẩu" class="mb-3" floating>
+            <TextInput v-model="model.password" type="password" placeholder="" />
+          </Field>
 
           <!-- SubmitButton -->
           <SubmitButton class="w-100">Đăng nhập</SubmitButton>

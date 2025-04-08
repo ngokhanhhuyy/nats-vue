@@ -12,7 +12,8 @@ import ValidationMessage from "./ValidationMessage.vue";
 const props = defineProps<{
   name: string;
   displayName: string;
-  required?: boolean
+  required?: boolean;
+  floating?: boolean;
 }>();
 
 // Provide.
@@ -21,11 +22,21 @@ provide(fieldNameKey, props.name);
 
 <template>
   <div class="form-group">
-    <label v-bind:for="name" v-bind:class="{ required }" class="form-label">
-      {{ displayName }}
-    </label>
+    <template v-if="floating">
+      <div class="form-floating">
+        <slot></slot>
+        <label v-bind:for="name" v-bind:class="{ required }">
+          {{ displayName }}
+        </label>
+      </div>
+    </template>
+    <template v-else>
+      <label v-bind:for="name" v-bind:class="{ required }" class="form-label">
+        {{ displayName }}
+      </label>
 
-    <slot></slot>
+      <slot></slot>
+    </template>
 
     <ValidationMessage v-bind:name />
   </div>

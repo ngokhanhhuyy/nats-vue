@@ -14,6 +14,7 @@ import MainBlock from "@/components/layouts/protected/MainBlock.vue";
 import Form from "@/components/form/Form.vue";
 import Field from "@/components/form/Field.vue";
 import TextInput from "@/components/form/TextInput.vue";
+import ImageInput from "@/components/form/ImageInput.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
 import DeleteButton from "@/components/form/DeleteButton.vue";
 
@@ -76,9 +77,12 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
     >
       <div class="row g-3 justify-content-end">
         <div class="col col-12">
-          <MainBlock v-bind:title="blockTitle" v-bind:body-padding="[2, 3, 3, 3]">
-            <Field name="thumbnailFile" displayName="Ảnh">
-              <TextInput v-model="model.thumbnailFile" />
+          <MainBlock
+            v-bind:title="blockTitle"
+            v-bind:body-padding="[2, 3, 3, 3]"
+          >
+            <Field name="thumbnailFile" displayName="Ảnh" class="mb-3">
+              <ImageInput v-model="model.thumbnailFile" />
             </Field>
             <Field name="title" displayName="Tiêu đề">
               <TextInput v-model="model.title" placeholder="Tiêu đề ảnh" />

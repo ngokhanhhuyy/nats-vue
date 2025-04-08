@@ -1,34 +1,36 @@
 <script setup lang="ts">
-import { ref, computed, inject, toRef, type Ref } from "vue";
-import { getPhotoUrl, fileToBase64Strings } from "@/utils/photoUtils";
+import { ref, computed, useTemplateRef, inject, toRef, onMounted, onUnmounted } from "vue";
+import { type Ref } from "vue";
+import { fileToBase64Strings } from "@/utils/photoUtils";
 import { formStateKey, type FormState } from "./Form.vue";
 import { fieldNameKey } from "./Field.vue";
+
+// Dependencies.
+const formState = inject<Ref<FormState>>(formStateKey);
+const fieldName = inject<string>(fieldNameKey);
 
 // Props and emits.
 const props = withDefaults(defineProps<{
   name?: string;
-  defaultSrc: string;
+  placeholderUrl?: string;
   url?: string | null;
   allowDelete?: boolean;
 }>(), {
   url: null,
   allowDelete: true,
 });
-const emit = defineEmits<{ (event: "change", file: string | null): void; }>();
 
-// Dependencies.
-const formState = inject<Ref<FormState>>(formStateKey);
-const fieldName = inject<string>(fieldNameKey);
-
-// Internal states.
+// States.
+const model = defineModel<string | null>();
 const source = toRef(props.url);
 const inputElement = ref<HTMLInputElement>();
-const defaultSource = getPhotoUrl(props.defaultSrc);
-const fileAsBase64 = ref<string | null>(null);
+const placeholderImageSource = ref<string | null>(null);
+const containerElement = useTemplateRef("container-element");
+let observer: ResizeObserver | null = null;
 
 // Computed properties.
 const deleteButtonVisible = computed<boolean>(() => {
-  return props.allowDelete && fileAsBase64.value != null;
+  return props.allowDelete && source.value != null;
 });
 
 const thumbnailPreviewClass = computed<string | undefined>(() => {
@@ -52,19 +54,42 @@ const thumbnailPreviewClass = computed<string | undefined>(() => {
   return names.join(" ");
 });
 
+// LifeCycle.
+onMounted(() => {
+  if (containerElement.value) {
+    observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        placeholderImageSource.value = generatePlaceholderImage(width, height);
+      }
+    });
+
+    observer.observe(containerElement.value);
+  }
+});
+
+onUnmounted(() => {
+  if (observer && containerElement.value) {
+    observer.unobserve(containerElement.value);
+    observer.disconnect();
+  }
+});
+
 // Functions.
+function generatePlaceholderImage(width: number, height: number): string {
+  return `https://placehold.co/${Math.round(width)}x${Math.round(height)}`;
+}
+
 async function onInputElementValueChanged(event: Event) {
   const files = (event.target as HTMLInputElement).files;
   if (files && files[0]) {
     const file = files[0];
     let base64ForJson: string;
     [source.value, base64ForJson] = await fileToBase64Strings(file);
-    emit("change", base64ForJson);
-    fileAsBase64.value = source.value;
+    model.value = base64ForJson;
   } else {
     source.value = null;
-    fileAsBase64.value = null;
-    emit("change", null);
+    model.value = null;
   }
 }
 
@@ -74,15 +99,14 @@ function handleEditButtonClicked() {
 
 function handleDeleteButtonClicked() {
   source.value = null;
-  fileAsBase64.value = null;
   inputElement.value!.value = "";
 }
 </script>
 
 <template>
-  <div class="thumbnail-container">
+  <div ref="container-element" class="thumbnail-container">
     <img
-      v-bind:src="source ?? defaultSource"
+      v-bind:src="source ?? placeholderImageSource ?? generatePlaceholderImage(800, 600)"
       v-bind:class="thumbnailPreviewClass"
       class="img-thumbnail"
     />
@@ -117,8 +141,9 @@ function handleDeleteButtonClicked() {
 .thumbnail-container {
   position: relative;
   overflow: visible;
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 800/600;
 }
 
 button {
@@ -139,8 +164,7 @@ button.delete-button {
 
 img.img-thumbnail {
   width: 100%;
-  height: auto;
-  aspect-ratio: 1;
+  height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
   overflow: hidden;
