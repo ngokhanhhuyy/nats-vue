@@ -24,6 +24,7 @@ async function fileToBase64Strings(file: File): Promise<[string, string]> {
     fileReader.onerror = () => {
       return reject();
     };
+    
     fileReader.readAsDataURL(file);
   });
 }

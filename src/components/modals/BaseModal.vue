@@ -83,12 +83,10 @@ function handleCancelButtonClick(): void {
 <template>
   <div
     ref="modalElement"
-    v-bind:aria-hidden="isVisible"
     v-bind:id="`modal-${uid}`"
     class="modal fade text-center px-2"
     tabindex="-1"
     data-bs-backdrop="static"
-    aria-labelledby="modal-label"
   >
     <div class="modal-dialog modal-dialog-centered mx-auto">
       <div class="modal-content">

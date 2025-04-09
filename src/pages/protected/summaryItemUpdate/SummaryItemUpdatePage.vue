@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import * as service from "@/services/sliderItemService";
-import { createSliderItemUpsertModel } from "@/models/sliderItemModels";
+import * as service from "@/services/summaryItemService";
+import { createSummaryItemUpsertModel } from "@/models/summaryItemModels";
 import { getProtectedContentRoutePath } from "@/utils/routeUtils";
 import { NotFoundError } from "@/errors";
 
@@ -14,53 +14,33 @@ import MainBlock from "@/components/layouts/protected/MainBlock.vue";
 import Form from "@/components/form/Form.vue";
 import Field from "@/components/form/Field.vue";
 import TextInput from "@/components/form/TextInput.vue";
+import TextAreaInput from "@/components/form/TextAreaInput.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
-import DeleteButton from "@/components/form/DeleteButton.vue";
 
 // Dependencies.
 const route = useRoute();
 const router = useRouter();
 
-// Props.
-const props = defineProps<{ isForCreating: boolean }>();
-
 // States.
 const model = ref(await initializeModelAsync());
 
-// Computed.
-const blockTitle = computed<string>(() => {
-  return props.isForCreating ? "Tạo ảnh trình chiếu mới" : "Chỉnh sửa ảnh trình chiếu";
-});
-
 // Functions.
-async function initializeModelAsync(): Promise<SliderItemUpsertModel> {
-  if (props.isForCreating) {
-    return createSliderItemUpsertModel();
-  }
-
+async function initializeModelAsync(): Promise<SummaryItemUpsertModel> {
   const id = parseInt(route.params.id as string);
   if (isNaN(id)) {
     throw new NotFoundError();
   }
   
-  const responseDto = await service.getSliderItemSingleAsync(id);
-  return createSliderItemUpsertModel(responseDto);
+  const responseDto = await service.getSummaryItemSingleAsync(id);
+  return createSummaryItemUpsertModel(responseDto);
 }
 
 async function handleSubmissionAsync(): Promise<void> {
-  if (props.isForCreating) {
-    await service.createSliderItemAsync(model.value.toRequestDto());
-  } else {
-    await service.updateSliderItemAsync(model.value.id, model.value.toRequestDto());
-  }
+  await service.updateSummaryItemAsync(model.value.id, model.value.toRequestDto());
 }
 
-async function handleDeletionAsync(): Promise<void> {
-  await service.deleteSliderItemAsync(model.value.id);
-}
-
-async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
+async function onSubmissionSucceededAsync(): Promise<void> {
   await router.push(getProtectedContentRoutePath());
 }
 </script>
@@ -70,19 +50,22 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
     <Form
       v-bind:model="model"
       v-bind:submitting-action="handleSubmissionAsync"
-      v-bind:deleting-action="handleDeletionAsync"
-      v-on:submission-success="onSubmissionOrDeletionSucceededAsync"
-      v-on:deletion-success="onSubmissionOrDeletionSucceededAsync"
+      v-on:submission-success="onSubmissionSucceededAsync"
       class="m-0 p-0"
     >
       <div class="row g-3 justify-content-end">
         <div class="col col-12">
-          <MainBlock
-            v-bind:title="blockTitle"
-            v-bind:body-padding="[2, 3, 3, 3]"
-          >
+          <MainBlock v-bind:body-padding="[2, 3, 3, 3]" title="Chỉnh sửa giới thiệu">
             <div class="row g-3 justify-content-center">
-              <div class="col col-12">
+              <!-- Name -->
+              <div class="col col-md-6 col-12">
+                <Field name="name" displayName="Tên" required>
+                  <TextInput v-model="model.name" placeholder="Tên" />
+                </Field>
+              </div>
+
+              <!-- Thumbnail -->
+              <div class="col col-md-6 col-12">
                 <Field name="thumbnailFile" displayName="Ảnh">
                   <ImageInput
                     v-model:file="model.thumbnailFile"
@@ -92,9 +75,26 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
                 </Field>
               </div>
 
+              <!-- SummaryContent -->
               <div class="col col-12">
-                <Field name="title" displayName="Tiêu đề">
-                  <TextInput v-model="model.title" placeholder="Tiêu đề ảnh" />
+                <Field name="summaryContent" displayName="Nội dung tóm tắt">
+                  <TextAreaInput
+                    v-model="model.summaryContent"
+                    maxlength="255"
+                    placeholder="Nội dung tóm tắt"
+                  />
+                </Field>
+              </div>
+
+              <!-- DetailContent -->
+              <div class="col col-12">
+                <Field name="detailContent" displayName="Nội dung chi tiết">
+                  <TextAreaInput
+                    v-model="model.detailContent"
+                    v-bind:minHeight="400"
+                    maxlength="3000"
+                    placeholder="Nội dung chi tiết"
+                  />
                 </Field>
               </div>
             </div>
@@ -102,8 +102,7 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
         </div>
 
         <div class="col col-auto">
-          <DeleteButton v-if="!isForCreating" />
-          <SubmitButton class="ms-3" />
+          <SubmitButton />
         </div>
       </div>
     </Form>

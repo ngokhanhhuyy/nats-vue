@@ -16,7 +16,7 @@ const isDisabled = computed<boolean>(() => {
 </script>
 
 <template>
-  <button v-bind:disabled="isDisabled" class="btn btn-success" type="submit">
+  <button v-bind:disabled="isDisabled" class="btn btn-success filter-shadow-sm" type="submit">
     <slot>
       <i class="bi bi-floppy mx-2"></i>
       <span class="me-2">Lưu</span>

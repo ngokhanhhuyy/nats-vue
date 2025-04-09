@@ -23,7 +23,7 @@ const isDisabled = computed<boolean>(() => {
   <button
     v-bind:disabled="isDisabled"
     v-on:click="formState?.delete"
-    class="btn btn-outline-danger px-4"
+    class="btn btn-outline-danger px-4 filter-shadow-sm"
     type="button"
   >
     <slot v-if="isDeleting" name="spinner">

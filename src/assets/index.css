@@ -42,7 +42,6 @@ input:not([type="checkbox"]):not(.is-invalid):not(.is-valid),
 textarea:not(.is-invalid):not(.is-valid),
 select:not(.is-invalid):not(.is-valid) {
   color: inherit !important;
-  background-color: rgba(var(--bs-primary-rgb), 0.01);
 }
 
 input:not([type="checkbox"]):not(.is-invalid):not(.is-valid):focus,
@@ -122,11 +121,36 @@ select:is(.is-valid)::placeholder {
   margin-left: 5px;
 }
 
+.btn-outline-primary:not(:hover),
+.btn-outline-success:not(:hover),
+.btn-outline-warning:not(:hover),
+.btn-outline-danger:not(:hover),
+.btn-outline-secondary:not(:hover) {
+  background: white !important;
+  overflow: hidden;
+}
+
 /* .row[class*="g-"]>[class^="col"],
 .row[class*="gy-"]>[class^="col"] {
   padding-top: calc(var(--bs-gutter-y) / 2);
   padding-bottom: calc(var(--bs-gutter-y) / 2);
 } */
+
+.filter-shadow-sm {
+  filter: drop-shadow(var(--bs-box-shadow-sm));
+}
+
+.filter-shadow {
+  filter: drop-shadow(var(--bs-box-shadow));
+}
+
+.filter.shadow-lg {
+  filter: drop-shadow(var(--bs-box-shadow-lg));
+}
+
+.filter.shadow-xl {
+  filter: drop-shadow(var(--bs-box-shadow-xl));
+}
 
 .fade-animation {
   animation-name: fade;

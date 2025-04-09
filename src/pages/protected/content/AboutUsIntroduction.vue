@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { RouterLink } from "vue-router";
 import { getAboutUsIntroductionAsync } from "@/services/aboutUsIntroductionService";
 import { createAboutUsIntroductionDetailModel } from "@/models/aboutUsIntroductionModels";
+import { getProtectedAboutUsIntroductionUpdateRoute } from "@/utils/routeUtils";
 
 // Layout component.
 import MainBlock from "@/components/layouts/protected/MainBlock.vue";
@@ -16,12 +18,15 @@ async function initializeModelAsync(): Promise<AboutUsIntroductionDetailModel> {
 </script>
 
 <template>
-  <MainBlock title="Về chúng tôi" v-bind:body-padding="[3, 3, 2, 3]" body-class="clearfix">
+  <MainBlock v-bind:body-padding="[3, 3, 2, 3]" title="Về chúng tôi" body-class="clearfix">
     <template #header>
-      <a href="#" class="btn btn-success btn-sm">
+      <RouterLink
+        v-bind:to="getProtectedAboutUsIntroductionUpdateRoute()"
+        class="btn btn-success btn-sm"
+      >
         <i class="bi bi-pencil-square"></i>
         <span class="d-sm-inline d-none ms-2">Sửa</span>
-      </a>
+      </RouterLink>
     </template>
 
     <template #body>

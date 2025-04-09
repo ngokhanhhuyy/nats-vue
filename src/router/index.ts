@@ -98,7 +98,28 @@ export const routeDefinitions: RouteRecordRaw[] = [
                 },
               }
             ]
-          }
+          },
+          {
+            name: "protectedSummaryItemUpdate",
+            path: "gioi-thieu/:id(\\d+)",
+            component: () => {
+              return import("@/pages/protected/summaryItemUpdate/SummaryItemUpdatePage.vue");
+            },
+            meta: {
+              pageTitle: "Chỉnh sửa giới thiệu",
+            },
+          },
+          {
+            name: "protectedAboutUsIntroductionUpdate",
+            path: "ve-chung-toi",
+            component: () => {
+              return import("@/pages/protected/aboutUsIntroductionUpdate" +
+                            "/AboutUsIntroductionUpdatePage.vue");
+            },
+            meta: {
+              pageTitle: "Chỉnh sửa về chúng tôi",
+            },
+          },
         ]
       },
     ]

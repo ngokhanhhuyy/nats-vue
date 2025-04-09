@@ -33,31 +33,24 @@ defineProps<{
       <ul class="list-group list-group-flush">
         <li v-for="item in model" v-bind:key="item.id" class="list-group-item">
           <!-- Thumbnail -->
-          <img
-            v-bind:src="item.thumbnailUrl"
-            v-bind:alt="nameSelector(item)"
-            class="img-thumbnail thumbnail rounded-circle"
-          />
+          <RouterLink v-bind:to="item.updateRoute" class="thumbnail-link">
+            <img
+              v-bind:src="item.thumbnailUrl"
+              v-bind:alt="nameSelector(item)"
+              class="img-thumbnail thumbnail rounded-circle"
+            />
+          </RouterLink>
 
           <!-- Detail -->
           <div class="ms-2 flex-fill d-flex flex-column detail">
-            <span class="fw-bold text-success">
+            <RouterLink v-bind:to="item.updateRoute" class="fw-bold text-success name-link">
               {{ nameSelector(item) }}
-            </span>
+            </RouterLink>
 
             <span v-if="descriptionSelector" class="small opacity-50">
               {{ descriptionSelector(item) }}
             </span>
           </div>
-
-          <!-- EditLink -->
-          <RouterLink
-            v-bind:to="item.updateRoute"
-            class="btn btn-outline-success btn-sm edit-link"
-          >
-            <i class="bi bi-pencil-square"></i>
-            <span class="d-sm-inline d-none ms-1">Sửa</span>
-          </RouterLink>
         </li>
       </ul>
     </template>
@@ -71,14 +64,30 @@ defineProps<{
   align-items: center;
 }
 
+.thumbnail-link {
+  width: fit-content;
+  height: fit-content;
+  flex-shrink: 0;
+}
+
+.thumbnail {
+  width: 60px;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
 .detail, .detail span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-:deep(.edit-link) {
-  flex-shrink: 0;
-  margin-left: 1rem;
+.name-link {
+  text-decoration: none;
+}
+
+.name-link:hover {
+  text-decoration: underline;
 }
 </style>

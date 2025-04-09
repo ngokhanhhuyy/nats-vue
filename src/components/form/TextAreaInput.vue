@@ -1,8 +1,7 @@
 <script lang="ts">
 type TextInputProps = {
   name?: string;
-  type?: "text" | "number" | "tel" | "email" | "url" | "password"
-	regex?: RegExp;
+  minHeight?: number;
 };
 </script>
 
@@ -17,36 +16,13 @@ const fieldName = inject<string>(fieldNameKey);
 
 // Props.
 const props = withDefaults(defineProps<TextInputProps>(), {
-  type: "text"
+  type: "text",
+  minHeight: 200
 });
 
 // State.
 const model = defineModel<string>({ default: "" });
 const inputElementRef = ref<HTMLInputElement>(null!);
-
-// Computed.
-const computedModel = computed<string>({
-  get(): string {
-    return isLoading.value ? "" : model.value;
-  },
-  set(newValue: string): void {
-    if (props.regex != null) {
-      const globalRegex = new RegExp(props.regex.source, props.regex.flags + "g");
-      inputElementRef.value.value = newValue.replace(globalRegex, "");
-    }
-
-    if (props.type === "tel") {
-      inputElementRef.value.value = newValue.replace(/[^$0-9_]/g, "");
-    }
-
-    if (props.type === "email") {
-      inputElementRef.value.value = newValue
-        .replace(/[^$a-zA-Z0-9!#%&'*+/=?^_`{|}~@.\\-]/g, "");
-    }
-
-    model.value = inputElementRef.value.value;
-  }
-});
 
 const computedClass = computed<string | undefined>(() => {
   if ((props.name ?? fieldName) && !isLoading.value) {
@@ -71,11 +47,12 @@ const isLoading = computed<boolean>(() => {
 </script>
 
 <template>
-  <input
-    v-model="computedModel"
-    v-bind="props"
+  <textarea
+    v-model="model"
+    v-bind:name="name ?? fieldName"
     v-bind:class="computedClass"
+    v-bind:style="{ minHeight: `${minHeight}px !important` }"
     ref="inputElementRef"
     class="form-control filter-shadow-sm"
-  />
+  ></textarea>
 </template>

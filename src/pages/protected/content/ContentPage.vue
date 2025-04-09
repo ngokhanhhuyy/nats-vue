@@ -124,12 +124,3 @@ async function initializeModelAsync() {
     </div>
   </ProtectedLayout>
 </template>
-
-<style scoped>
-:deep(.thumbnail) {
-  width: 60px;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-}
-</style>

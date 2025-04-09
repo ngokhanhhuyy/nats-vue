@@ -49,7 +49,7 @@ const bodyComputedClass = computed<string | null>(() => {
 </script>
 
 <template>
-  <div class="d-flex flex-column">
+  <div class="block d-flex flex-column filter-shadow-sm">
     <div v-bind:class="headerComputedClass" class="block-header">
       <span class="fw-bold small text-success h-auto pt-1">
         {{ title.toUpperCase() }}

@@ -1,22 +1,22 @@
 import { getProtectedSliderItemUpdateRoutePath } from "@/utils/routeUtils";
 
 declare global {
-  type SliderItemDetailModel = {
+  type SliderItemDetailModel = Implements<IHasThumbnailBasicModel, {
     id: number;
     title: string | null;
     index: number;
     thumbnailUrl: string;
     updateRoute: string;
-  }
+  }>;
 
-  type SliderItemUpsertModel = {
+  type SliderItemUpsertModel = Implements<IHasThumbnailUpsertModel, {
     id: number;
     title: string;
     thumbnailUrl: string | null;
     thumbnailFile: string | null;
     thumbnailChanged: boolean;
     toRequestDto(): SliderItemUpsertRequestDto;
-  }
+  }>;
 }
 
 function createDetail(responseDto: SliderItemResponseDto): SliderItemDetailModel {
