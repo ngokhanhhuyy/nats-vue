@@ -23,6 +23,7 @@ declare global {
 	type CatalogItemDetailPhotoResponseDto = {
 		id: number;
 		url: string;
+		description: string | null;
 	}
 }
 

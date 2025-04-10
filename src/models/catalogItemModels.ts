@@ -7,7 +7,7 @@ import {
 } from "@/utils/routeUtils";
 
 declare global {
-  type CatalogItemBasicModel = {
+  type CatalogItemBasicModel = Implements<IHasThumbnailBasicModel, {
     id: number;
     name: string;
     type: CatalogItemType;
@@ -15,34 +15,65 @@ declare global {
     thumbnailUrl: string;
     detailRoute: string;
     updateRoute: string;
-  };
+  }>;
 
-  type CatalogItemDetailModel = {
-    id: number;
-    name: string;
-    type: CatalogItemType;
-    summary: string;
-    detail: string;
-    thumbnailUrl: string | null;
-    photos: CatalogItemDetailPhotoModel[];
-    otherItems: CatalogItemBasicModel[];
-    detailRoute: string;
-    updateRoute: string;
-    typeDisplayName: string;
-  };
+  type CatalogItemDetailModel = Implements<
+    IHasThumbnailDetailModel & IHasPhotosDetailModel<CatalogItemDetailPhotoModel>,
+    {
+      id: number;
+      name: string;
+      type: CatalogItemType;
+      summary: string;
+      detail: string;
+      thumbnailUrl: string | null;
+      photos: CatalogItemDetailPhotoModel[];
+      otherItems: CatalogItemBasicModel[];
+      detailRoute: string;
+      updateRoute: string;
+      typeDisplayName: string;
+    }
+  >;
 
-  type CatalogItemDetailPhotoModel = {
+  type CatalogItemDetailPhotoModel = Implements<IDetailPhotoModel, {
     id: number;
     url: string;
-  };
+    description: string | null;
+  }>;
+
+  type CatalogItemUpsertModel = Implements<
+    IHasThumbnailUpsertModel & IHasPhotosUpsertModel<CatalogItemUpsertPhotoModel>, {
+      id: number;
+      name: string;
+      type: CatalogItemType;
+      summary: string;
+      detail: string;
+      photos: CatalogItemUpsertPhotoModel[];
+      thumbnailUrl: string | null;
+      thumbnailFile: string | null;
+      thumbnailChanged: boolean;
+      toRequestDto(): UpsertRequestDto;
+    }>;
+
+  type CatalogItemUpsertPhotoModel = Implements<IUpsertPhotoModel, {
+    id: number | null;
+    description: string;
+    url: string | null;
+    file: string | null;
+    isDeleted: boolean,
+    toRequestDto(): UpsertPhotoRequestDto;
+  }>;
 }
 
+type UpsertRequestDto = CatalogItemUpsertRequestDto;
+type UpsertPhotoRequestDto = CatalogItemUpsertPhotoRequestDto;
 type BasicResponseDto = CatalogItemBasicResponseDto;
 type DetailResponseDto = CatalogItemDetailResponseDto;
 type DetailPhotoResponseDto = CatalogItemDetailPhotoResponseDto;
 type BasicModel = CatalogItemBasicModel;
 type DetailModel = CatalogItemDetailModel;
 type DetailPhotoModel = CatalogItemDetailPhotoModel;
+type UpsertModel = CatalogItemUpsertModel;
+type UpsertPhotoModel = CatalogItemUpsertPhotoModel;
 
 const typeDisplayNames: Record<CatalogItemType, string> = {
   [CatalogItemType.Service]: "Dịch vụ",
@@ -118,19 +149,82 @@ function createDetailPhoto(
   responseDto: DetailPhotoResponseDto,
   asPlaceholder: boolean = false,
 ): DetailPhotoModel {
-  let url: string = responseDto.url;
-  if (asPlaceholder) {
-    url = "https://placehold.co/800x600";
-  }
-
   return {
     id: responseDto.id,
-    url: url,
+    description: responseDto.description,
+    url: asPlaceholder ? "https://placehold.co/800x600" : responseDto.url,
   };
+}
+
+function createUpsert(responseDto?: DetailResponseDto): UpsertModel {
+  const model: UpsertModel = {
+    id: 0,
+    name: "",
+    type: CatalogItemType.Service,
+    summary: "",
+    detail: "",
+    photos: [],
+    thumbnailUrl: null,
+    thumbnailFile: null,
+    thumbnailChanged: false,
+    toRequestDto() {
+      return {
+        id: this.id,
+        name: this.name,
+        type: this.type,
+        summary: this.summary,
+        detail: this.detail,
+        photos: this.photos.map(photo => photo.toRequestDto()),
+        thumbnailFile: this.thumbnailFile,
+        thumbnailChanged: this.thumbnailChanged
+      };
+    }
+  };
+
+  if (responseDto) {
+    model.id = responseDto.id;
+    model.name = responseDto.name;
+    model.type = responseDto.type;
+    model.summary = responseDto.summary;
+    model.detail = responseDto.detail;
+    model.photos = responseDto.photos.map(photo => createUpsertPhoto(photo));
+    model.thumbnailUrl = responseDto.thumbnailUrl;
+  }
+
+  return model;
+}
+
+function createUpsertPhoto(responseDto?: DetailPhotoResponseDto): UpsertPhotoModel {
+  const model: CatalogItemUpsertPhotoModel = {
+    id: null,
+    description: "",
+    url: null,
+    file: null,
+    isDeleted: false,
+    toRequestDto() {
+      return {
+        id: this.id,
+        url: this.url,
+        description: this.description || null,
+        file: this.file,
+        isDeleted: this.isDeleted
+      };
+    }
+  };
+
+  if (responseDto) {
+    model.id = responseDto.id;
+    model.url = responseDto.url;
+    model.isDeleted = false;
+  }
+
+  return model;
 }
 
 export {
   createBasic as createCatalogItemBasicModel,
   createDetail as createCatalogItemDetailModel,
   createDetailPhoto as createCatalogItemDetailPhotoModel,
+  createUpsert as createCatalogItemUpsertModel,
+  createUpsertPhoto as createCatalogItemUpsertPhotoModel
 };

@@ -110,16 +110,61 @@ export const routeDefinitions: RouteRecordRaw[] = [
             },
           },
           {
-            name: "protectedAboutUsIntroductionUpdate",
-            path: "ve-chung-toi",
-            component: () => {
-              return import("@/pages/protected/aboutUsIntroductionUpdate" +
-                            "/AboutUsIntroductionUpdatePage.vue");
-            },
-            meta: {
-              pageTitle: "Chỉnh sửa về chúng tôi",
-            },
+            path: "doi-ngu",
+            children: [
+              {
+                name: "protectedMemberCreate",
+                path: "",
+                component: () => {
+                  return import("@/pages/protected/memberUpsert/MemberUpsertPage.vue");
+                },
+                props: { isForCreating: true },
+                meta: {
+                  pageTitle: "Tạo thành viên đội ngũ",
+                },
+              },
+              {
+                name: "protectedMemberUpdate",
+                path: ":id(\\d+)",
+                component: () => {
+                  return import("@/pages/protected/memberUpsert/MemberUpsertPage.vue");
+                },
+                props: { isForCreating: false },
+                meta: {
+                  pageTitle: "Chỉnh sửa thành viên đội ngũ",
+                },
+              },
+            ]
           },
+          {
+            path: "chung-chi",
+            children: [
+              {
+                name: "protectedCertificateCreate",
+                path: "",
+                component: () => {
+                  return import("@/pages/protected/certificateUpsert" +
+                                "/CertificateUpsertPage.vue");
+                },
+                props: { isForCreating: true },
+                meta: {
+                  pageTitle: "Tạo chứng chỉ",
+                },
+              },
+              {
+                name: "protectedCertificateUpdate",
+                path: ":id(\\d+)",
+                component: () => {
+                  return import("@/pages/protected/certificateUpsert" +
+                                "/CertificateUpsertPage.vue");
+                },
+                props: { isForCreating: false },
+                meta: {
+                  pageTitle: "Chỉnh sửa chứng chỉ",
+                },
+              },
+            ]
+          }
         ]
       },
     ]

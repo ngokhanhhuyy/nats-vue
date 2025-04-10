@@ -6,17 +6,39 @@ declare global {
   }
 
   interface IHasThumbnailBasicModel {
-    thumbnailUrl: string;
+    thumbnailUrl: string | null;
   }
 
   interface IHasThumbnailDetailModel {
-    thumbnailUrl: string;
+    thumbnailUrl: string | null;
   }
 
   interface IHasThumbnailUpsertModel {
     thumbnailUrl: string | null;
     thumbnailFile: string | null;
     thumbnailChanged: boolean;
+  }
+
+  interface IHasPhotosDetailModel<TPhoto extends IDetailPhotoModel> {
+    photos: TPhoto[];
+  }
+
+  interface IHasPhotosUpsertModel<TPhoto extends IUpsertPhotoModel> {
+    photos: TPhoto[];
+  }
+
+  interface IDetailPhotoModel {
+    id: number;
+    url: string;
+    description: string | null;
+  }
+
+  interface IUpsertPhotoModel {
+    id: number | null;
+    description: string;
+    url: string | null;
+    file: string | null;
+    isDeleted: boolean;
   }
 }
 
