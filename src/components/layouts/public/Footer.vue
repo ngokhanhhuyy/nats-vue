@@ -116,7 +116,7 @@ const protectedDashboardLinkText = computed<string>(() => {
 
           <RouterLink
             v-bind:to="protectedDashboardLinkPath"
-            class="btn btn-outline-success btn-sm mt-3 sign-in-link"
+            class="btn btn-success btn-sm mt-3 sign-in-link"
           >
             {{ protectedDashboardLinkText }}
           </RouterLink>
@@ -152,14 +152,5 @@ footer .links-column :deep(a) {
 
 .logo-container img {
   width: 65%;
-}
-
-.sign-in-link {
-  color: var(--bs-success) !important;
-  filter: brightness(150%);
-}
-
-.sign-in-link:hover {
-  color: var(--bs-dark) !important;
 }
 </style>

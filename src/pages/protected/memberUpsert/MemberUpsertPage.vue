@@ -69,7 +69,7 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
     >
       <div class="row g-3 justify-content-end">
         <div class="col col-12">
-          <MainBlock v-bind:body-padding="[2, 3, 3, 3]" title="Chỉnh sửa giới thiệu">
+          <MainBlock v-bind:title="route.meta.pageTitle" v-bind:body-padding="[2, 3, 3, 3]">
             <div class="row g-3 justify-content-center">
               <!-- Thumbnail -->
               <div class="col col-xl-4 col-12">

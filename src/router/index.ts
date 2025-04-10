@@ -164,6 +164,35 @@ export const routeDefinitions: RouteRecordRaw[] = [
                 },
               },
             ]
+          },
+          {
+            path: "catalog",
+            children: [
+              {
+                name: "protectedCatalogItemCreate",
+                path: "",
+                component: () => {
+                  return import("@/pages/protected/catalogItemUpsert" +
+                                "/CatalogItemUpsertPage.vue");
+                },
+                props: { isForCreated: true },
+                meta: {
+                  pageTitle: "Tạo mục catalog mới"
+                }
+              },
+              {
+                name: "protectedCatalogItemUpdate",
+                path: ":id(\\d+)",
+                component: () => {
+                  return import("@/pages/protected/catalogItemUpsert" +
+                                "/CatalogItemUpsertPage.vue");
+                },
+                props: { isForCreated: false },
+                meta: {
+                  pageTitle: "Chỉnh sửa mục catalog"
+                }
+              },
+            ]
           }
         ]
       },

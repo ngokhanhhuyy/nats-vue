@@ -27,7 +27,6 @@ const props = defineProps<{ isForCreating: boolean }>();
 
 // States.
 const model = ref(await initializeModelAsync());
-const title = document.title;
 
 // Functions.
 async function initializeModelAsync(): Promise<CertificateUpsertModel> {
@@ -69,10 +68,10 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
     >
       <div class="row g-3 justify-content-end">
         <div class="col col-12">
-          <MainBlock v-bind:body-padding="[2, 3, 3, 3]" v-bind:title="title">
+          <MainBlock v-bind:body-padding="[2, 3, 3, 3]" v-bind:title="route.meta.pageTitle">
             <div class="row g-3 justify-content-center">
               <!-- Thumbnail -->
-              <div class="col col-xl-4 col-12">
+              <div class="col col-md-6 col-12">
                 <Field name="thumbnailFile" displayName="Ảnh">
                   <ImageInput
                     v-model:file="model.thumbnailFile"
@@ -83,7 +82,7 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
               </div>
 
               <!-- Name -->
-              <div class="col col-xl-4 col-md-6 col-12">
+              <div class="col col-md-6 col-12">
                 <Field name="name" displayName="Tên chứng chỉ" required>
                   <TextInput
                     v-model="model.name"
