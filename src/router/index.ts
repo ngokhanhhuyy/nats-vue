@@ -193,7 +193,7 @@ export const routeDefinitions: RouteRecordRaw[] = [
                 }
               },
             ]
-          }
+          },
         ]
       },
     ]

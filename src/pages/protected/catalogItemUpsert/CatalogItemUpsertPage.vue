@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import * as service from "@/services/catalogItemService";
 import { createCatalogItemUpsertModel } from "@/models/catalogItemModels";
+import { CatalogItemType } from "@/enums/catalogItemType";
 import { getProtectedContentRoutePath } from "@/utils/routeUtils";
 import { NotFoundError } from "@/errors";
 
@@ -14,6 +15,8 @@ import MainBlock from "@/components/layouts/protected/MainBlock.vue";
 import Form from "@/components/form/Form.vue";
 import Field from "@/components/form/Field.vue";
 import TextInput from "@/components/form/TextInput.vue";
+import TextAreaInput from "@/components/form/TextAreaInput.vue";
+import SelectInput, { type SelectInputOption } from "@/components/form/SelectInput.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
 import DeleteButton from "@/components/form/DeleteButton.vue";
@@ -27,7 +30,14 @@ const props = defineProps<{ isForCreating: boolean }>();
 
 // States.
 const model = ref(await initializeModelAsync());
-const title = document.title;
+
+// Computed.
+const typeOptions = computed<SelectInputOption<CatalogItemType>[]>(() => {
+  return [
+    { value: CatalogItemType.Service, text: "Dịch vụ" },
+    { value: CatalogItemType.Course, text: "Khóa học" }
+  ];
+});
 
 // Functions.
 async function initializeModelAsync(): Promise<CatalogItemUpsertModel> {
@@ -69,26 +79,61 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
     >
       <div class="row g-3 justify-content-end">
         <div class="col col-12">
-          <MainBlock v-bind:body-padding="[2, 3, 3, 3]" v-bind:title="title">
+          <MainBlock v-bind:body-padding="[2, 3, 3, 3]" v-bind:title="route.meta.pageTitle">
             <div class="row g-3 justify-content-center">
               <!-- Name -->
-              <div class="col col-xl-4 col-12">
-                <Field name="name" displayName="Tên chứng chỉ" required>
+              <div class="col col-12">
+                <Field name="name" displayName="Tên" required>
                   <TextInput
                     v-model="model.name"
                     maxlength="100"
-                    placeholder="Tên chứng chỉ"
+                    placeholder="Tên"
+                  />
+                </Field>
+              </div>
+
+              <!-- Type -->
+              <div class="col col-md-6 col-12">
+                <Field name="type" displayName="Loại" required>
+                  <SelectInput
+                    v-model="model.type"
+                    v-bind:options="typeOptions"
+                    maxlength="100"
+                    placeholder="Phân loại"
                   />
                 </Field>
               </div>
               
               <!-- Thumbnail -->
-              <div class="col col-xl-4 col-md-6 col-12">
+              <div class="col col-md-6 col-12">
                 <Field name="thumbnailFile" displayName="Ảnh">
                   <ImageInput
                     v-model:file="model.thumbnailFile"
                     v-model:changed="model.thumbnailChanged"
                     placeholder="Ảnh"
+                  />
+                </Field>
+              </div>
+              
+              <!-- Summary -->
+              <div class="col col-12">
+                <Field name="summary" displayName="Tóm tắt">
+                  <TextAreaInput
+                    v-model="model.summary"
+                    placeholder="Tóm tắt"
+                    maxlength="255"
+                  />
+                </Field>
+              </div>
+              
+              <!-- Detail -->
+              <div class="col col-12">
+                <Field name="detail" displayName="Chi tiết">
+                  <TextAreaInput
+                    v-model="model.detail"
+                    v-bind:min-height="400"
+                    placeholder="Chi tiết"
+                    maxlength="5000"
                   />
                 </Field>
               </div>
