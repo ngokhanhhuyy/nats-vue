@@ -15,9 +15,14 @@ const props = withDefaults(defineProps<{
   placeholderUrl?: string;
   url?: string | null;
   allowDelete?: boolean;
+  aspectRatio?: number;
+  width?: string;
+  maxWidth?: string;
 }>(), {
   url: null,
   allowDelete: true,
+  width: "100%",
+  maxWidth: "400px"
 });
 
 // States.
@@ -26,7 +31,7 @@ const changedModel = defineModel<boolean>("changed", { required: true });
 const base64ForHTMLImageElement = ref<string | null>(null);
 const inputElement = useTemplateRef<HTMLInputElement>("input");
 const placeholderImageSource = ref<string | null>(null);
-const fallbackPlaceholderImageSource = generatePlaceholderImage(512, 256);
+const fallbackPlaceholderImageSource = "/images/front-pages/default.jpg";
 
 // Computed properties.
 const source = computed<string>(() => {
@@ -65,10 +70,6 @@ const thumbnailPreviewClass = computed<string | undefined>(() => {
 });
 
 // Functions.
-function generatePlaceholderImage(width: number, height: number): string {
-  return `https://placehold.co/${Math.round(width)}x${Math.round(height)}`;
-}
-
 async function onInputElementValueChanged(event: Event) {
   changedModel.value = true;
   const files = (event.target as HTMLInputElement).files;
@@ -138,8 +139,9 @@ function handleDeleteButtonClicked() {
 .thumbnail-container {
   position: relative;
   overflow: visible;
-  width: 100%;
-  max-width: 400px;
+  width: v-bind(width);
+  max-width: v-bind(maxWidth);
+  aspect-ratio: v-bind(aspectRatio);
 }
 
 button {

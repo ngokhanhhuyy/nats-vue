@@ -16,6 +16,9 @@
     sans-serif !important;
   --bs-body-font-size: 1.2rem !important;
   --navbar-height: 60px;
+  --filter-shadow-sm: drop-shadow(var(--bs-box-shadow-sm));
+  --filter-shadow: drop-shadow(var(--bs-box-shadow));
+  --filter-shadow-lg: drop-shadow(var(--bs-box-shadow-lg));
 }
 
 html,
@@ -62,12 +65,12 @@ select:is(.is-invalid) {
   border-color: var(--bs-danger);
 }
 
-input:not([type="checkbox"]):is(.is-invalid):hover,
+/* input:not([type="checkbox"]):is(.is-invalid):hover,
 textarea:is(.is-invalid):hover,
 select:is(.is-invalid):hover {
   border-color: var(--bs-danger) !important;
   box-shadow: 0 0 0 0.2rem rgba(var(--bs-danger-rgb), 0.25) !important;
-}
+} */
 
 input:not([type="checkbox"]):is(.is-valid),
 textarea:is(.is-valid),
@@ -76,12 +79,12 @@ select:is(.is-valid) {
   background-color: rgba(var(--bs-success-rgb), 0.1) !important;
 }
 
-input:not([type="checkbox"]):is(.is-valid):hover,
+/* input:not([type="checkbox"]):is(.is-valid):hover,
 textarea:is(.is-valid):hover,
 select:is(.is-valid):hover {
   border-color: var(--bs-success) !important;
   box-shadow: 0 0 0 0.2rem rgba(var(--bs-success-rgb), 0.25) !important;
-}
+} */
 
 input[type="checkbox"],
 select {
@@ -137,19 +140,15 @@ select:is(.is-valid)::placeholder {
 } */
 
 .filter-shadow-sm {
-  filter: drop-shadow(var(--bs-box-shadow-sm));
+  filter: var(--filter-shadow-sm);
 }
 
 .filter-shadow {
-  filter: drop-shadow(var(--bs-box-shadow));
+  filter: var(--filter-shadow);
 }
 
 .filter.shadow-lg {
-  filter: drop-shadow(var(--bs-box-shadow-lg));
-}
-
-.filter.shadow-xl {
-  filter: drop-shadow(var(--bs-box-shadow-xl));
+  filter: var(--filter-shadow-lg);
 }
 
 .fade-animation {

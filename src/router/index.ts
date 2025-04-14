@@ -187,7 +187,7 @@ export const routeDefinitions: RouteRecordRaw[] = [
                   return import("@/pages/protected/catalogItemUpsert" +
                                 "/CatalogItemUpsertPage.vue");
                 },
-                props: { isForCreated: false },
+                props: { isForCreating: false },
                 meta: {
                   pageTitle: "Chỉnh sửa mục catalog"
                 }

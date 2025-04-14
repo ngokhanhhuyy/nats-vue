@@ -16,8 +16,10 @@ import Form from "@/components/form/Form.vue";
 import Field from "@/components/form/Field.vue";
 import TextInput from "@/components/form/TextInput.vue";
 import TextAreaInput from "@/components/form/TextAreaInput.vue";
+import Editor from "@/components/form/Editor.vue";
 import SelectInput, { type SelectInputOption } from "@/components/form/SelectInput.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
+import ImageInputWithPreview from "@/components/form/ImageInputWithPreview.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
 import DeleteButton from "@/components/form/DeleteButton.vue";
 
@@ -81,38 +83,53 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
         <div class="col col-12">
           <MainBlock v-bind:body-padding="[2, 3, 3, 3]" v-bind:title="route.meta.pageTitle">
             <div class="row g-3 justify-content-center">
-              <!-- Name -->
-              <div class="col col-12">
-                <Field name="name" displayName="Tên" required>
-                  <TextInput
-                    v-model="model.name"
-                    maxlength="100"
-                    placeholder="Tên"
+              <div class="col col-auto">
+                <Field name="thumbnailFile" displayName="Ảnh đại diện">
+                  <ImageInputWithPreview
+                    v-model:file="model.thumbnailFile"
+                    v-model:changed="model.thumbnailChanged"
+                    v-bind:aspect-ratio="1"
+                    width="190px"
                   />
                 </Field>
               </div>
 
-              <!-- Type -->
-              <div class="col col-md-6 col-12">
-                <Field name="type" displayName="Loại" required>
-                  <SelectInput
-                    v-model="model.type"
-                    v-bind:options="typeOptions"
-                    maxlength="100"
-                    placeholder="Phân loại"
-                  />
-                </Field>
-              </div>
-              
-              <!-- Thumbnail -->
-              <div class="col col-md-6 col-12">
-                <Field name="thumbnailFile" displayName="Ảnh">
-                  <ImageInput
-                    v-model:file="model.thumbnailFile"
-                    v-model:changed="model.thumbnailChanged"
-                    placeholder="Ảnh"
-                  />
-                </Field>
+              <div class="col col-md col-12">
+                <div class="row g-3 ps-md-3 ps-0">
+                  <!-- Name -->
+                  <div class="col col-12">
+                    <Field name="name" displayName="Tên" required>
+                      <TextInput
+                        v-model="model.name"
+                        maxlength="100"
+                        placeholder="Tên"
+                      />
+                    </Field>
+                  </div>
+
+                  <!-- Type -->
+                  <div class="col col-12">
+                    <Field name="type" displayName="Loại" required>
+                      <SelectInput
+                        v-model="model.type"
+                        v-bind:options="typeOptions"
+                        maxlength="100"
+                        placeholder="Phân loại"
+                      />
+                    </Field>
+                  </div>
+                  
+                  <!-- Thumbnail -->
+                  <div class="col col-12">
+                    <Field name="thumbnailFile" displayName="Ảnh">
+                      <ImageInput
+                        v-model:file="model.thumbnailFile"
+                        v-model:changed="model.thumbnailChanged"
+                        placeholder="Ảnh"
+                      />
+                    </Field>
+                  </div>
+                </div>
               </div>
               
               <!-- Summary -->
@@ -125,16 +142,11 @@ async function onSubmissionOrDeletionSucceededAsync(): Promise<void> {
                   />
                 </Field>
               </div>
-              
+
               <!-- Detail -->
               <div class="col col-12">
                 <Field name="detail" displayName="Chi tiết">
-                  <TextAreaInput
-                    v-model="model.detail"
-                    v-bind:min-height="400"
-                    placeholder="Chi tiết"
-                    maxlength="5000"
-                  />
+                  <Editor v-model="model.detail" />
                 </Field>
               </div>
             </div>

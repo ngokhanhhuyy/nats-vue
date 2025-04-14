@@ -14,6 +14,7 @@ import {
     AuthorizationError,
     UndefinedError } from "./errors";
 import App from "./App.vue";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
 
 const app = createApp(App);
 app.use(router);

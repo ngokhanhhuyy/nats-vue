@@ -12,7 +12,6 @@ import MainBlock from "@/components/layouts/protected/MainBlock.vue";
 // Form components.
 import Form from "@/components/form/Form.vue";
 import Field from "@/components/form/Field.vue";
-// import TextInput from "@/components/form/TextInput.vue";
 import TextAreaInput from "@/components/form/TextAreaInput.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";

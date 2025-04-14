@@ -24,6 +24,7 @@ const props = withDefaults(defineProps<TextInputProps>(), {
 const model = defineModel<string>({ default: "" });
 const inputElementRef = ref<HTMLInputElement>(null!);
 
+// Computed.
 const computedClass = computed<string | undefined>(() => {
   if ((props.name ?? fieldName) && !isLoading.value) {
     return formState?.value.modelErrorMessagesStore
