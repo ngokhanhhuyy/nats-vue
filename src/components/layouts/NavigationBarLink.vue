@@ -23,6 +23,3 @@ const computedClass = computed<string>(() => {
     <slot></slot>
   </RouterLink>
 </template>
-
-<style scoped>
-</style>

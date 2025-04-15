@@ -39,7 +39,7 @@ export async function convertResponseErrorToException(response: Response): Promi
 
     // Not found error
 		case 404:
-      return new NotFoundError(jsonUtils.parseJson<ApiErrorMessages>(errorMessagesJson)!);
+      return new NotFoundError();
 
     // Duplicated error
 		case 409:

@@ -201,7 +201,8 @@ watch(() => route.fullPath, () => {
     --bs-nav-link-color: var(--navbar-foreground-color) !important;
     --bs-nav-link-hover-color: var(--navbar-foreground-color) !important;
     --bs-navbar-active-color: var(--navbar-foreground-color) !important;
-    margin-right: 15px;
+    font-size: .8em;
+    margin-right: .75em;
     padding: 3px 10px;
     border-radius: 8px;
   }
