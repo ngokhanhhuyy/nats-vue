@@ -31,6 +31,7 @@ const mainMarginTop = computed<string>(() => {
     <main class="d-flex flex-column flex-fill h-100">
       <RouterView v-slot="{ Component }">
         <template v-if="Component">
+        
           <Transition name="fade" mode="out-in">
             <Suspense>
               <Component v-bind:is="Component" v-bind:key="route.fullPath" />
