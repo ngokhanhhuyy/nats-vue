@@ -16,6 +16,7 @@ import Field from "@/components/form/Field.vue";
 import TextInput from "@/components/form/TextInput.vue";
 import TextAreaInput from "@/components/form/TextAreaInput.vue";
 import ImageInput from "@/components/form/ImageInput.vue";
+import ImageInputWithPreview from "@/components/form/ImageInputWithPreview.vue";
 import SubmitButton from "@/components/form/SubmitButton.vue";
 
 // Dependencies.
@@ -58,25 +59,24 @@ async function onSubmissionSucceededAsync(): Promise<void> {
           <MainBlock v-bind:body-padding="[2, 3, 3, 3]" title="Chỉnh sửa giới thiệu">
             <div class="row g-3 justify-content-center">
               <!-- Name -->
-              <div class="col col-md-6 col-12">
-                <Field name="name" displayName="Tên" required>
-                  <TextInput v-model="model.name" placeholder="Tên" />
-                </Field>
-              </div>
-
-              <!-- Thumbnail -->
-              <div class="col col-md-6 col-12">
-                <Field name="thumbnailFile" displayName="Ảnh">
-                  <ImageInput
+              <div class="col col-lg-auto col-12 thumbnail-column">
+                <!-- Thumbnail -->
+                <Field name="thumbnailFile" displayName="Ảnh" class="mb-3">
+                  <ImageInputWithPreview
                     v-model:file="model.thumbnailFile"
                     v-model:changed="model.thumbnailChanged"
+                    width="180px"
                     placeholder="Ảnh"
                   />
                 </Field>
               </div>
 
-              <!-- SummaryContent -->
-              <div class="col col-12">
+              <div class="col">
+                <Field name="name" displayName="Tên" required>
+                  <TextInput v-model="model.name" placeholder="Tên" />
+                </Field>
+
+                <!-- SummaryContent -->
                 <Field name="summaryContent" displayName="Nội dung tóm tắt">
                   <TextAreaInput
                     v-model="model.summaryContent"
@@ -108,3 +108,17 @@ async function onSubmissionSucceededAsync(): Promise<void> {
     </Form>
   </ProtectedLayout>
 </template>
+
+<style scoped>
+.thumbnail-column {
+  display: flex;
+  justify-content: center;
+  margin-right: 1rem; 
+}
+
+@media (max-width: 992px) {
+  .thumbnail-column {
+    margin-right: 0;
+  }
+}
+</style>

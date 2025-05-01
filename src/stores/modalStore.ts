@@ -15,33 +15,37 @@ export type Mode =
     | "undefinedErrorNotification";
 
 export type ModalStore = {
-    notFoundErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
-    discardingConfirmationResolve: ((value: PromiseLike<boolean> | boolean) => void) | null;
-    submissionErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
-    submissionSuccessResolve: ((value: PromiseLike<void> | void) => void) | null;
-    deletionConfirmationResolve: ((value: PromiseLike<boolean> | boolean) => void) | null;
-    deletionErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
-    deletionSuccessResolve: ((value: PromiseLike<void> | void) => void) | null;
-    dataUnchangedSubmissionResolve: ((value: PromiseLike<void> | void) => void) | null;
-    authorizationErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
-    fileTooLargeErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
-    undefinedErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
-    reset(): void;
-    getNotFoundErrorConfirmationAsync(): Promise<void>;
-    getDiscardingConfirmationAsync(): Promise<boolean>;
-    getSubmissionSuccessConfirmationAsync(): Promise<void>;
-    getSubmissionErrorConfirmationAsync(): Promise<void>;
-    getDeletionConfirmationAsync(): Promise<boolean>;
-    getDeletionSuccessConfirmationAsync(): Promise<void>;
-    getDeletionErrorConfirmationAsync(): Promise<void>;
-    getDataUnchangedSubmissionConfirmationAsync(): Promise<void>;
-    getAuthorizationErrorConfirmationAsync(): Promise<void>;
-    getFileTooLargeConfirmationAsync(): Promise<void>;
-    getUndefinedErrorConfirmationAsync(): Promise<void>;
-}
+  fileTooLargeSize: number | null;
+  notFoundErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  discardingConfirmationResolve: ((value: PromiseLike<boolean> | boolean) => void) | null;
+  submissionErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  submissionSuccessResolve: ((value: PromiseLike<void> | void) => void) | null;
+  deletionConfirmationResolve: ((value: PromiseLike<boolean> | boolean) => void) | null;
+  deletionErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  deletionSuccessResolve: ((value: PromiseLike<void> | void) => void) | null;
+  dataUnchangedSubmissionResolve: ((value: PromiseLike<void> | void) => void) | null;
+  authorizationErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  fileTooLargeErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  invalidFileErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  undefinedErrorResolve: ((value: PromiseLike<void> | void) => void) | null;
+  reset(): void;
+  getNotFoundErrorConfirmationAsync(): Promise<void>;
+  getDiscardingConfirmationAsync(): Promise<boolean>;
+  getSubmissionSuccessConfirmationAsync(): Promise<void>;
+  getSubmissionErrorConfirmationAsync(): Promise<void>;
+  getDeletionConfirmationAsync(): Promise<boolean>;
+  getDeletionSuccessConfirmationAsync(): Promise<void>;
+  getDeletionErrorConfirmationAsync(): Promise<void>;
+  getDataUnchangedSubmissionConfirmationAsync(): Promise<void>;
+  getAuthorizationErrorConfirmationAsync(): Promise<void>;
+  getFileTooLargeConfirmationAsync(attemptedFileSize: number): Promise<void>;
+  getInvalidFileErrorConfirmationAsync(): Promise<void>;
+  getUndefinedErrorConfirmationAsync(): Promise<void>;
+};
 
 export const useModalStore: () => ModalStore = defineStore("modal", () => {
   // States.
+  const fileTooLargeSize = ref<number | null>(null);
   const notFoundErrorResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
   const discardingConfirmationResolve = ref<((value: PromiseLike<boolean> | boolean) => void) | null>(null);
   const submissionErrorResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
@@ -52,10 +56,12 @@ export const useModalStore: () => ModalStore = defineStore("modal", () => {
   const dataUnchangedSubmissionResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
   const authorizationErrorResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
   const fileTooLargeErrorResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
+  const invalidFileErrorResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
   const undefinedErrorResolve = ref<((value: PromiseLike<void> | void) => void) | null>(null);
 
   // Actions.
   function reset(): void {
+    fileTooLargeSize.value = null;
     notFoundErrorResolve.value = null;
     discardingConfirmationResolve.value = null;
     submissionErrorResolve.value = null;
@@ -66,6 +72,7 @@ export const useModalStore: () => ModalStore = defineStore("modal", () => {
     dataUnchangedSubmissionResolve.value = null;
     authorizationErrorResolve.value = null;
     fileTooLargeErrorResolve.value = null;
+    invalidFileErrorResolve.value = null;
     undefinedErrorResolve.value = null;
   }
 
@@ -150,9 +157,19 @@ export const useModalStore: () => ModalStore = defineStore("modal", () => {
     });
   }
 
-  async function getFileTooLargeConfirmationAsync(): Promise<void> {
+  async function getFileTooLargeConfirmationAsync(attemptedFileSize: number): Promise<void> {
+    fileTooLargeSize.value = attemptedFileSize;
     return new Promise<void>(resolve => {
       fileTooLargeErrorResolve.value = (value: void | PromiseLike<void>) => {
+        resolve(value);
+        reset();
+      };
+    });
+  }
+
+  async function getInvalidFileErrorConfirmationAsync(): Promise<void> {
+    return new Promise<void>(resolve => {
+      invalidFileErrorResolve.value = (value: void | PromiseLike<void>) => {
         resolve(value);
         reset();
       };
@@ -169,6 +186,7 @@ export const useModalStore: () => ModalStore = defineStore("modal", () => {
   }
   
   return {
+    fileTooLargeSize,
     notFoundErrorResolve,
     discardingConfirmationResolve,
     submissionErrorResolve,
@@ -179,6 +197,7 @@ export const useModalStore: () => ModalStore = defineStore("modal", () => {
     dataUnchangedSubmissionResolve,
     authorizationErrorResolve,
     fileTooLargeErrorResolve,
+    invalidFileErrorResolve,
     undefinedErrorResolve,
     reset,
     getNotFoundErrorConfirmationAsync,
@@ -191,6 +210,7 @@ export const useModalStore: () => ModalStore = defineStore("modal", () => {
     getDataUnchangedSubmissionConfirmationAsync,
     getAuthorizationErrorConfirmationAsync,
     getFileTooLargeConfirmationAsync,
+    getInvalidFileErrorConfirmationAsync,
     getUndefinedErrorConfirmationAsync
   };
 });

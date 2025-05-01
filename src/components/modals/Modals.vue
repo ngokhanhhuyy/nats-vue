@@ -5,6 +5,8 @@ import SubmissionErrorModal from "../modals/SubmissionErrorModal.vue";
 import DeletionSuccessModal from "../modals/DeletionSuccessModal.vue";
 import DeletionConfirmationModal from "../modals/DeletionConfirmationModal.vue";
 import AuthorizationErrorModal from "../modals/AuthorizationErrorModal.vue";
+import FileTooLargeErrorModal from "./FileTooLargeErrorModal.vue";
+import InvalidFileErrorModal from "./InvalidFileErrorModal.vue";
 </script>
 
 <template>
@@ -14,4 +16,6 @@ import AuthorizationErrorModal from "../modals/AuthorizationErrorModal.vue";
   <DeletionConfirmationModal />
   <DeletionSuccessModal />
   <AuthorizationErrorModal />
+  <FileTooLargeErrorModal />
+  <InvalidFileErrorModal />
 </template>

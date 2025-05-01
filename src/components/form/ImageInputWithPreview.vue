@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, useTemplateRef, inject } from "vue";
 import { type Ref } from "vue";
+import { uploadPhotoAsync } from "@/services/photoService";
 import { fileToBase64Strings } from "@/utils/photoUtils";
+import { useModalStore } from "@/stores/modalStore";
+
+// Form components.
 import { formStateKey, type FormState } from "./Form.vue";
 import { fieldNameKey } from "./Field.vue";
+import { FileTooLargeError, ValidationError } from "@/errors";
 
 // Dependencies.
+const modalStore = useModalStore();
 const formState = inject<Ref<FormState>>(formStateKey);
 const fieldName = inject<string>(fieldNameKey);
 
@@ -28,6 +34,7 @@ const props = withDefaults(defineProps<{
 // States.
 const fileModel = defineModel<string | null>("file", { required: true });
 const changedModel = defineModel<boolean>("changed", { required: true });
+const isUploading = ref<boolean>(false);
 const base64ForHTMLImageElement = ref<string | null>(null);
 const inputElement = useTemplateRef<HTMLInputElement>("input");
 const placeholderImageSource = ref<string | null>(null);
@@ -45,7 +52,7 @@ const source = computed<string>(() => {
 });
 
 const deleteButtonVisible = computed<boolean>(() => {
-  return props.allowDelete && source.value != null;
+  return source.value != null;
 });
 
 const thumbnailPreviewClass = computed<string | undefined>(() => {
@@ -75,9 +82,25 @@ async function onInputElementValueChanged(event: Event) {
   const files = (event.target as HTMLInputElement).files;
   if (files && files[0]) {
     const file = files[0];
-    let base64ForJson: string;
-    [base64ForHTMLImageElement.value, base64ForJson] = await fileToBase64Strings(file);
-    fileModel.value = base64ForJson;
+    try {
+      isUploading.value = true;
+      const uploadedUrls = await uploadPhotoAsync(file);
+      base64ForHTMLImageElement.value = uploadedUrls.thumbnailUrl;
+      // [base64ForHTMLImageElement.value, base64ForJson] = await fileToBase64Strings(file);
+      const base64ForJson = (await fileToBase64Strings(file))[1];
+      fileModel.value = base64ForJson;
+    } catch (error) {
+      if (error instanceof FileTooLargeError) {
+        await modalStore.getFileTooLargeConfirmationAsync(error.attemptedFileSize);
+        return;
+      }
+
+      if (error instanceof ValidationError) {
+        await modalStore.getInvalidFileErrorConfirmationAsync();
+      }
+    } finally {
+      isUploading.value = false;
+    }
   } else {
     base64ForHTMLImageElement.value = null;
     fileModel.value = null;
@@ -102,10 +125,17 @@ function handleDeleteButtonClicked() {
 <template>
   <div ref="container-element" class="thumbnail-container">
     <img
+      v-if="!isUploading"
       v-bind:src="source"
       v-bind:class="thumbnailPreviewClass"
       class="img-thumbnail"
     />
+
+    <div v-else class="spinner-container img-thumbnail">
+      <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
+        <span class="visually-hidden">Đang tải ...</span>
+      </div>
+    </div>
 
     <input
       v-bind:name="name"
@@ -166,5 +196,14 @@ img.img-thumbnail {
   object-fit: cover;
   object-position: 50% 50%;
   overflow: hidden;
+}
+
+.spinner-container {
+  background: var(--bs-secondary-subtle);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
